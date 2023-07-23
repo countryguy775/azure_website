@@ -4,6 +4,9 @@
     "parameters": {
         "storageAccountName": {
             "value": "mlhwebsitestorage001"
+        },
+        "location": {
+            "value": "website"
         }
     }
 }
