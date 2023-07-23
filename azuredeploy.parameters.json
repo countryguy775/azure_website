@@ -5,8 +5,11 @@
         "storageAccountName": {
             "value": "mlhwebsitestorage001"
         },
-        "location": {
+        "resourceGroup": {
             "value": "website"
+        },
+        "location": {
+            "value": "resourceGroup().location"
         }
     }
 }
