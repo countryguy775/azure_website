@@ -20,7 +20,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2022-09-01",
             "name": "[parameters('storageAccountName')]",
-            "location": "[resourceGroup().location]",
+            "location": "eastus",
             "sku": {
                 "name": "Standard_LRS",
                 "tier": "Standard"
