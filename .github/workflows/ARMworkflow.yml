@@ -23,7 +23,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: "website"
           template: ./azuredeploy.json
-          scope: resourceGroup
+          scope: resourcegroup
 
         # output containerName variable from template
       - run: echo "Complete."
