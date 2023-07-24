@@ -24,6 +24,7 @@ jobs:
           resourceGroupName: "website"
           template: ./azuredeploy.json
           scope: resourcegroup
+          parameters: ./azuredeploy.parameters.json
 
         # output containerName variable from template
       - run: echo "Complete."
