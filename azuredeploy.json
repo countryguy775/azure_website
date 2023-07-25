@@ -92,6 +92,16 @@
             }
         },
         {
+            "type": "Microsoft.Cdn/Profiles",
+            "apiVersion": "2022-11-01-preview",
+            "name": "[parameters('resourceGroup')]",
+            "location": "global",
+            "sku": {
+                "name": "Standard_Microsoft"
+            },
+            "kind": "cdn"
+        },
+        {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2023-01-31",
             "name": "[variables('userAssignedIDName')]",
