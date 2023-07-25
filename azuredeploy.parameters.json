@@ -11,10 +11,10 @@
         "location": {
             "value": "eastus"
         },
-        "indexDocumentString":{
+        "indexDocumentPath":{
             "value": "index.html"
         },
-        "error404Path":{
+        "errorDocument404Path":{
             "value": "error.html"
         }
     }
