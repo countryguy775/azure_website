@@ -78,7 +78,9 @@
             ],
             "properties": {
                 "StaticWebsite": {
-                    "enabled": true
+                    "enabled": true,
+                    "indexDocument": "index.html",
+                    "errorDocument404Path": "error.html"
                 }
             }
         },
