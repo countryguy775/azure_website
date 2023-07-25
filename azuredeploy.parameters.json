@@ -10,6 +10,12 @@
         },
         "location": {
             "value": "eastus"
+        },
+        "indexDocumentString":{
+            "value": "index.html"
+        },
+        "error404Path":{
+            "value": "error.html"
         }
     }
 }
