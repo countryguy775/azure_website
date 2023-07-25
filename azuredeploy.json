@@ -77,14 +77,7 @@
             "name": "[concat(parameters('storageAccountName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ],
-            "properties": {
-                "StaticWebsite": {
-                    "enabled": true,
-                    "indexDocument": "index.html",
-                    "errorDocument404Path": "error.html"
-                }
-            }
+            ]
         },
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
@@ -120,9 +113,58 @@
                 "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))).principalId]",
                 "principalType": "ServicePrincipal"
             }
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "enableStaticWeb",
+            "location": "[parameters('location')]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')))]": {}
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "3.0",
+                "scriptContent": "
+                    $ErrorActionPreference = 'Stop'\n
+                    $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:ResourceGroupName -AccountName $env:StorageAccountName\n
+                    $ctx = $StorageAccount.Context\n
+                    Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath -ErrorDocument404Path $env:ErrorDocument404Path\n
+                ",
+                "retentionInterval": "PT4H",
+                "environmentVariables": [
+                    {
+                        "name": "ResourceGroupName",
+                        "value": "[resourceGroup().name]"
+                    },
+                    {
+                        "name": "StorageAccountName",
+                        "value": "[parameters('storageAccountName')]"
+                    },
+                    {
+                        "name": "IndexDocumentPath",
+                        "value": "[parameters('indexDocumentPath')]"
+                    },
+                    {
+                        "name": "ErrorDocument404Path",
+                        "value": "[parameters('errorDocument404Path')]"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))]",
+                "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ]
         }
     ],
     "outputs": {
-        
+        "staticWebsiteUrl": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web]"
+        }
     }
 }
