@@ -75,7 +75,12 @@
             "name": "[concat(parameters('storageAccountName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ]
+            ],
+            "properties": {
+                "StaticWebsite": {
+                    "enabled": true
+                }
+            }
         },
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
@@ -110,41 +115,6 @@
                 "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), '2018-11-30', 'Full').properties.principalId]",
                 
                 "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2020-10-01",
-            "name": "enableStaticWeb",
-            "location": "[resourceGroup().location]",
-            "kind": "AzurePowerShell",
-            "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments', variables('roleAssignmentName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', 'configs' )]"
-            ],
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))]": {}
-                }
-            },
-            "properties": {
-                "azPowerShellVersion": "3.0",
-                "scriptContent": "
-                param(
-                    [string] $resourceGroup,
-                    [string] $storageAccountName,
-                    [string] $indexDocumentString,
-                    [string] $error404Path
-                )
-                    $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroup -AccountName $storageAccountName
-                    $ctx = $storageAccount.Context
-                    Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $indexDocumentString -ErrorDocument404Path $error404Path
-                    
-                    $DeploymentScriptOutputs = @{}
-                    $DeploymentScriptOutputs['url'] = $storageAccount.PrimaryEndpoints.Web
-                ",
-                "retentionInterval": "P1D"
             }
         }
     ],
