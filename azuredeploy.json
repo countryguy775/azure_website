@@ -140,9 +140,7 @@
                     $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroup -AccountName $storageAccountName
                     $ctx = $storageAccount.Context
                     Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $indexDocumentString -ErrorDocument404Path $error404Path
-                    '''
-                        
-                        arguments: '-ResourceGroupName ${resourceGroup} -StorageAccountName ${accountName} -IndexDocument ${IndexDocument} -ErrorDocument404Path ${error404Path}'
+                    
                     $DeploymentScriptOutputs = @{}
                     $DeploymentScriptOutputs['url'] = $storageAccount.PrimaryEndpoints.Web
                 ",
