@@ -92,6 +92,35 @@
             }
         },
         {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "registerCdnProvider",
+            "location": "[parameters('location')]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')))]": {}
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "3.0",
+                "scriptContent": "
+                    Register-AzResourceProvider -ProviderNamespace Microsoft.Azure.Management.Cdn\n
+                "
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles",
+            "apiVersion": "2022-11-01-preview",
+            "name": "[parameters('resourceGroup')]",
+            "location": "global",
+            "sku": {
+                "name": "Standard_Microsoft"
+            },
+            "kind": "cdn"
+        },
+        {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2023-01-31",
             "name": "[variables('userAssignedIDName')]",
