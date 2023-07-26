@@ -180,7 +180,7 @@
                 "[resourceId('Microsoft.Cdn/profiles', parameters('resourceGroup'))]"
             ],
             "properties": {
-                "originHostHeader": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web]",
+                "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
                 "contentTypesToCompress": [
                     "application/eot",
                     "application/font",
@@ -230,12 +230,12 @@
                 "queryStringCachingBehavior": "IgnoreQueryString",
                 "origins": [
                     {
-                        "name": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web]",
+                        "name": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
                         "properties": {
-                            "hostName": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web]",
+                            "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
                             "httpPort": 80,
                             "httpsPort": 443,
-                            "originHostHeader": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web]",
+                            "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
                             "priority": 1,
                             "weight": 1000,
                             "enabled": true
