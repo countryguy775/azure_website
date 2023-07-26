@@ -249,7 +249,7 @@
         {
             "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
             "apiVersion": "2022-11-01-preview",
-            "name": "[concat(parameters('resourceGroup'), '/hodgesfamily/dev-thehodgesfamily-net')]",
+            "name": "[concat(parameters('resourceGroup'), 'dev/hodgesfamily/dev-thehodgesfamily-net')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('resourceGroup'), 'hodgesfamily')]",
                 "[resourceId('Microsoft.Cdn/profiles', parameters('resourceGroup'))]"
