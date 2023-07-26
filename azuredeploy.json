@@ -230,7 +230,7 @@
                 "queryStringCachingBehavior": "IgnoreQueryString",
                 "origins": [
                     {
-                        "name": "devorigin",
+                        "name": "mlhdevorigin",
                         "properties": {
                             "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web), 9))]",
                             "httpPort": 80,
