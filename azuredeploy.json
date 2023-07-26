@@ -180,7 +180,7 @@
                 "[resourceId('Microsoft.Cdn/profiles', parameters('resourceGroup'))]"
             ],
             "properties": {
-                "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
+                "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, length(-1))]",
                 "contentTypesToCompress": [
                     "application/eot",
                     "application/font",
@@ -230,12 +230,12 @@
                 "queryStringCachingBehavior": "IgnoreQueryString",
                 "origins": [
                     {
-                        "name": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
+                        "name": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, length(-1))]",
                         "properties": {
-                            "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
+                            "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, length(-1))]",
                             "httpPort": 80,
                             "httpsPort": 443,
-                            "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 7)]",
+                            "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, length(-1))]",
                             "priority": 1,
                             "weight": 1000,
                             "enabled": true
