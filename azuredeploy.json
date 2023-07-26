@@ -131,7 +131,6 @@
                 "azPowerShellVersion": "3.0",
                 "scriptContent": "
                     $ErrorActionPreference = 'Stop'\n
-                    Register-AzResourceProvider -ProviderNamespace Microsoft.Azure.Management.Cdn\n
                     $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:ResourceGroupName -AccountName $env:StorageAccountName\n
                     $ctx = $StorageAccount.Context\n
                     Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath -ErrorDocument404Path $env:ErrorDocument404Path\n
