@@ -27,5 +27,15 @@ jobs:
           scope: resourcegroup
           parameters: ./azuredeploy.parameters.json
 
+        # Copy files
+      - name: Copy Files
+        uses: azurefilecopy@5
+        with:
+          sourcepath: './index.html'
+          azuresubscription: '${{ secrets.AZURE_SUBSCRIPTION_ID }}'
+          destination: 'azureblob'
+          storage: 'mlhwebsitestorage001'
+          containername: '$web'
+
         # output containerName variable from template
       - run: echo ${{steps.deploy.outputs.staticWebsiteUrl}}
