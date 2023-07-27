@@ -28,17 +28,15 @@ jobs:
           parameters: ./azuredeploy.parameters.json
 
         # Copy files
-      - name: AzureFileCopy
-        uses: azurefilecopy@4
-        id: copy
+      - name: upload html
+        uses: bacongobbler/azure-blob-storage-upload@main
         with:
-          sourcepath: './index.html'
-          azuresubscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          destination: 'azureblob'
-          storage: 'mlhwebsitestorage001'
-          containername: '$web'
+          source_dir: '.'
+          container_name: $web
+          extra_args: '--pattern *.html'
+          
 
 
 
         # output containerName variable from template
-      - run: echo ${{steps.deploy.outputs.staticWebsiteUrl}}
+      -  run: echo ${{steps.deploy.outputs.staticWebsiteUrl}}
