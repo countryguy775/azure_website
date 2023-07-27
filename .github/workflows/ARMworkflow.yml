@@ -33,6 +33,7 @@ jobs:
         with:
           source_dir: '.'
           container_name: $web
+          connection_string: ${{ secrets.CONNECTION_STRING }}
           extra_args: '--pattern *.html'
           
 
