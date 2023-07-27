@@ -255,10 +255,7 @@
                 "[resourceId('Microsoft.Cdn/profiles', parameters('resourceGroup'))]"
             ],
             "properties": {
-                "hostName": "dev.thehodgesfamily.net",
-                "tlsSettings": {
-                    "minimumTlsVersion": "TLS12"
-                }
+                "hostName": "dev.thehodgesfamily.net"
             }
         }
     ],
