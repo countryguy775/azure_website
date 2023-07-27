@@ -35,9 +35,8 @@ jobs:
           container_name: $web
           connection_string: ${{ secrets.CONNECTION_STRING }}
           extra_args: '--pattern *.html'
+          overwrite: 'true'
           
-
-
 
         # output containerName variable from template
       -  run: echo ${{steps.deploy.outputs.staticWebsiteUrl}}
