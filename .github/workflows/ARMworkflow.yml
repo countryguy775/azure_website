@@ -8,13 +8,6 @@ jobs:
       runs-on: ubuntu-latest
       steps:
 
-      - name: Set pipeline variable
-        id: set_pipeline_variable
-        shell: pwsh
-        run: |
-          $content = Get-Content ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          Write-Output ::set-output name=subId::$content
-
         # Checkout code
       - uses: actions/checkout@main
 
@@ -37,6 +30,8 @@ jobs:
         #Powershell
       - name: Enable HTTPS
         uses: azure/powershell@v1
+        env:
+          subId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         with:
           inlineScript: |
             POST https://management.azure.com/subscriptions/$subId/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/website/hodgesfamilydev/customdomains/customDomain/enableCustomHttps?api-version=2018-04-02"
