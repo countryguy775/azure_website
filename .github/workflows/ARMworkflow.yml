@@ -34,20 +34,23 @@ jobs:
           subId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         with:
           inlineScript: |
-            POST https://management.azure.com/subscriptions/\"$env:subId\"/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/website/hodgesfamilydev/customdomains/customDomain/enableCustomHttps?api-version=2018-04-02"
+            
+            POST https://management.azure.com/subscriptions/{$env:subId}/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/website/hodgesfamilydev/customdomains/customDomain/enableCustomHttps?api-version=2018-04-02"
           azPSVersion: "latest"
 
-        # Copy files
-      - name: upload html
-        uses: bacongobbler/azure-blob-storage-upload@main
-        with:
-          source_dir: '.'
-          container_name: $web
-          connection_string: ${{ secrets.CONNECTION_STRING }}
-          extra_args: '--pattern *.html'
-          overwrite: 'true'
-          
-      
 
         # output containerName variable from template
       -  run: echo ${{steps.deploy.outputs.staticWebsiteUrl}}
+
+    Upload:
+      runs-on: ubuntu-latest
+      steps:
+        # Copy files
+        - name: upload html
+          uses: bacongobbler/azure-blob-storage-upload@main
+          with:
+            source_dir: '.'
+            container_name: $web
+            connection_string: ${{ secrets.CONNECTION_STRING }}
+            extra_args: '--pattern *.html'
+            overwrite: 'true'
