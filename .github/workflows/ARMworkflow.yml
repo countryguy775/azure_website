@@ -27,15 +27,7 @@ jobs:
           scope: resourcegroup
           parameters: ./azuredeploy.parameters.json
 
-        #Powershell
-      - name: Enable HTTPS
-        uses: azure/powershell@v1
-        with:
-          inlineScript: |
-            
-            Enable-AzFrontDoorCustomDomainHttps -ResourceGroupName "website" -FrontDoorName "website" -FrontendEndpointName "hodgesfamilydev"
-
-          azPSVersion: "latest"
+        
 
 
         # output containerName variable from template
