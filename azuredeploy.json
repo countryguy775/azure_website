@@ -25,7 +25,8 @@
     "variables": {
         "userAssignedIDName": "configDeployer",
         "roleAssignmentName": "[guid(concat(resourceGroup().id, 'contributor'))]",
-        "RoleDefinitionID": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]"
+        "RoleDefinitionID_StorageContributor": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
+        "RoleDefinitionID_EndpointContributor": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '426e0c7f-0c7e-4658-b36f-ff54d6c29b45')]"
     },
     "resources": [
         {
@@ -110,12 +111,30 @@
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
             ],
             "properties": {
-                "roleDefinitionId": "[variables('RoleDefinitionID')]",
+                "roleDefinitionId": "[variables('RoleDefinitionID_StorageContributor')]",
                 "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))).principalId]",
                 "principalType": "ServicePrincipal"
             }
         },
-        
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '426e0c7f-0c7e-4658-b36f-ff54d6c29b45'))]",
+            "identity": {
+                "type": "UserAssigned"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('resourceGroup'), 'hodgesfamilydev')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('RoleDefinitionID_EndpointContributor')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))).principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
         {
             "type": "Microsoft.Cdn/profiles",
             "apiVersion": "2022-11-01-preview",
@@ -222,7 +241,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'mysp'))]": {}
+                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')))]": {}
                 }
             },
             "properties": {
