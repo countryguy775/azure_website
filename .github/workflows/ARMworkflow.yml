@@ -30,12 +30,11 @@ jobs:
         #Powershell
       - name: Enable HTTPS
         uses: azure/powershell@v1
-        env:
-          subId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         with:
           inlineScript: |
             
-            POST "https://management.azure.com/subscriptions/8c28f21f-c2cf-4bc5-aa3e-cfef9ffea106/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/website/hodgesfamilydev/customdomains/customDomain/enableCustomHttps?api-version=2018-04-02"
+            Enable-AzFrontDoorCustomDomainHttps -ResourceGroupName "website" -FrontDoorName "website" -FrontendEndpointName "hodgesfamilydev"
+
           azPSVersion: "latest"
 
 
