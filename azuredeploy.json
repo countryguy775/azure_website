@@ -199,7 +199,8 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'mysp'))]": {}
+                    "[subscriptionResourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'mysp')]": {}
+                    
                 }
             },
             "properties": {
