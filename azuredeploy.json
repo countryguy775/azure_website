@@ -222,7 +222,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')))]": {}
+                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'mysp'))]": {}
                 }
             },
             "properties": {
