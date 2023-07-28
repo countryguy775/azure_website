@@ -12,7 +12,7 @@ jobs:
         id: set_pipeline_variable
         shell: pwsh
         run: |
-          $content = ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          $content = Get-Content ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           Write-Output ::set-output name=subId::$content
 
         # Checkout code
