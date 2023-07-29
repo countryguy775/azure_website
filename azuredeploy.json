@@ -113,9 +113,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2022-09-01",
-            "subscriptionId": "[subscription().subscriptionid]",
+            
             "resourceGroup": "[parameters('resourceGroup')]",
-            "location": "[resourceGroup().location]",
+            
             "name": "[concat(parameters('rolesToAssignManagedIdentity')[copyIndex()].name, '_', guid(parameters('rolesToAssignManagedIdentity')[copyIndex()].name))]",
             "copy": {
                 "name": "rolesCopy",
