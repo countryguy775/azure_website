@@ -139,7 +139,7 @@
                            "name": "[guid(parameters('rolesToAssignManagedIdentity')[copyIndex()].name)]",
                            "properties": {
                             "roleDefinitionId": "[parameters('rolesToAssignManagedIdentity')[copyIndex()].role]",
-                            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), '2023-01-31', 'Full').identity.principalId]",
+                            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), '2023-01-31', 'Full').properties.principalId]",
                             "principalType": "ServicePrincipal"
                            }
                         }
