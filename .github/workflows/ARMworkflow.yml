@@ -33,7 +33,7 @@ jobs:
         
       - name: Powershell Script
         shell: pwsh
-        run: POST https://management.azure.com/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/hodgesfamilydev/customdomains/dev-thehodgesfamily-net/enableCustomHttps?api-version=2018-04-02
+        run: Invoke-WebRequest -Uri https://management.azure.com/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/hodgesfamilydev/customdomains/dev-thehodgesfamily-net/enableCustomHttps?api-version=2018-04-02 -Method POST
 
 
         # output containerName variable from template
