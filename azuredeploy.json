@@ -265,7 +265,7 @@
                     $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:ResourceGroupName -AccountName $env:StorageAccountName\n
                     $ctx = $StorageAccount.Context\n
                     Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath -ErrorDocument404Path $env:ErrorDocument404Path\n
-                    Enable-AzFrontDoorCustomDomainHttps -ResourceGroupName $env:ResourceGroupName -FrontDoorName 'website' -FrontendEndpointName 'hodgesfamilydev'\n
+                    POST https://management.azure.com/subscriptions/subid/resourceGroups/RG/providers/Microsoft.Cdn/profiles/profile1/endpoints/endpoint1/customDomains/www-someDomain-net/enableCustomHttps?api-version=2023-05-01\n
                 ",
                 "retentionInterval": "PT4H",
                 "environmentVariables": [
