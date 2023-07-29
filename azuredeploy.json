@@ -25,11 +25,11 @@
             "defaultValue": [
                 {
                     "name": "StorageContributor",
-                    "role": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]"
+                    "role": "[concat('/subscription/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]"
                 },
                 {
                     "name": "CDNProfileContributor",
-                    "role": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432')]"
+                    "role": "[concat('/subscription/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432')]"
                 }
             ]
         }
@@ -113,9 +113,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2022-09-01",
-            "subscriptionId": "[subscription().subscriptionid]",
+            
             "resourceGroup": "[parameters('resourceGroup')]",
-            "location": "[resourceGroup().location]",
+            
             "name": "[concat(parameters('rolesToAssignManagedIdentity')[copyIndex()].name, '_', guid(parameters('rolesToAssignManagedIdentity')[copyIndex()].name))]",
             "copy": {
                 "name": "rolesCopy",
@@ -139,7 +139,7 @@
                            "name": "[guid(parameters('rolesToAssignManagedIdentity')[copyIndex()].name)]",
                            "properties": {
                             "roleDefinitionId": "[parameters('rolesToAssignManagedIdentity')[copyIndex()].role]",
-                            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), '2023-01-31', 'Full').identity.principalId]",
+                            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), '2023-01-31', 'Full').properties.principalId]",
                             "principalType": "ServicePrincipal"
                            }
                         }
