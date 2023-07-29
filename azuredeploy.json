@@ -118,7 +118,7 @@
                 "name": "rolesCopy",
                 "count": "[length(parameters('rolesToAssignForManagedIdentity'))]"
             },
-            "scope": "[format('subscriptions/subscription().subscriptionid/{0}', parameters('resourceGroup'))]",
+            "scope": "subscriptions/subscription().subscriptionid/",
             "name": "[guid(parameters('rolesToAssignForManagedIdentity')[copyIndex()].name, '-', guid(parameters('rolesToAssignForManagedIdentity')[copyIndex()].name)) ]",
             "identity": {
                 "type": "UserAssigned"
