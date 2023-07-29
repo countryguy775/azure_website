@@ -27,7 +27,13 @@ jobs:
           scope: resourcegroup
           parameters: ./azuredeploy.parameters.json
 
+    Powershell:
+      runs-on: ubuntu-latest
+      steps:
         
+      - name: Powershell Script
+        shell: pwsh
+        run: POST https://management.azure.com/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourcegroups/website/providers/Microsoft.Cdn/profiles/website/endpoints/hodgesfamilydev/customdomains/dev-thehodgesfamily-net/enableCustomHttps?api-version=2018-04-02
 
 
         # output containerName variable from template
