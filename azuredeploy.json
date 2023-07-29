@@ -19,19 +19,6 @@
         "errorDocument404Path": {
             "type": "string",
             "defaultValue": "error.html"
-        },
-        "rolesToAssignForManagedIdentity": {
-            "type": "array",
-            "defaultValue": [
-                {
-                    "name": "storageContributor",
-                    "role": "[concat('/subscription/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]"
-                },
-                {
-                    "name": "CDNProfileContributor",
-                    "role": "[concat('/subscription/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432')]"
-                }
-            ]
         }
     },
     "functions": [],
@@ -114,11 +101,8 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2022-04-01",
-            "copy": {
-                "name": "rolesCopy",
-                "count": "[length(parameters('rolesToAssignForManagedIdentity'))]"
-            },
-            "name": "[guid(parameters('rolesToAssignForManagedIdentity')[copyIndex()].name, '-', guid(parameters('rolesToAssignForManagedIdentity')[copyIndex()].name)) ]",
+            "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
             "identity": {
                 "type": "UserAssigned"
             },
@@ -127,12 +111,29 @@
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
             ],
             "properties": {
-                "roleDefinitionId": "[parameters('rolesToAssignForManagedIdentity')[copyIndex().role]]",
+                "roleDefinitionId": "[variables('RoleDefinitionID_StorageContributor')]",
                 "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))).principalId]",
                 "principalType": "ServicePrincipal"
             }
         },
-        
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '426e0c7f-0c7e-4658-b36f-ff54d6c29b45'))]",
+            "identity": {
+                "type": "UserAssigned"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('RoleDefinitionID_StorageContributor')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))).principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
         {
             "type": "Microsoft.Cdn/profiles",
             "apiVersion": "2022-11-01-preview",
