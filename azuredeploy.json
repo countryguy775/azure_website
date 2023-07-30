@@ -34,9 +34,6 @@
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
     "resourceGroup": "[variables('resourceGroupName')]",
-    "dependsOn": [
-        "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
-    ],
     "properties": {
         "mode": "Incremental",
         "template": {
@@ -47,7 +44,7 @@
                     "type": "Microsoft.Storage/storageAccounts",
                     "apiVersion": "2022-09-01",
                     "name": "[variables('storageAccountName')]",
-                    "location": "[resourceGroup().location]",
+                    "location": "[parameters('appLocation')]",
                     "kind": "StorageV2",
                     "sku": {
                         "name": "Standard_LRS"
@@ -55,7 +52,10 @@
                 }
             ]
         }
-    }
+    },
+    "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
+    ]
    }
   ]
 }
