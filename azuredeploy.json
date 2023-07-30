@@ -1,31 +1,31 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "applocation": {
-            "type": "string"
-        },
-        "appName": {
-            "type": "string"
-        },
-        "environment": {
-            "defaultValue": "dev",
-            "allowedValues": [
-                "dev",
-                "prod"
-            ],
-            "type": "string"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appLocation": {
+        "type": "string"
     },
-    "variables": {
-        "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]"
+    "appName": {
+        "type": "string"
     },
-    "resources": [
-        {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "[parameters('applocation')]",
-            "name": "[variables('resourceGroupName')]"
-        }
-    ]
+    "environment": {
+        "defaultValue": "dev",
+        "allowedValues": [
+            "dev",
+            "prod"
+        ],
+        "type": "string"
+    }
+  },
+  "variables": {
+    "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]"
+  },
+  "resources": [
+    {
+        "type": "Microsoft.Resources/resourceGroups",
+        "apiVersion": "2022-09-01",
+        "location": "[parameters('appLocation')]",
+        "name": "[variables('resourceGroupName')]"
+    }
+  ]
 }
