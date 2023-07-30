@@ -22,7 +22,7 @@ jobs:
         id: deploy
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: "website"
+          region: eastus
           template: ./azuredeploy.json
           scope: subscription
           parameters: ./azuredeploy.parameters.json
