@@ -21,11 +21,12 @@
     "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]"
   },
   "resources": [
-    {
-        "type": "Microsoft.Resources/resourceGroups",
-        "apiVersion": "2022-09-01",
-        "location": "[parameters('appLocation')]",
-        "name": "[variables('resourceGroupName')]"
-    }
+   {
+    "type": "Microsoft.Resources/resourceGroups",
+    "apiVersion": "2022-09-01",
+    "name": "[variables('resourceGroupName')]",
+    "location": "[parameters('appLocation')]",
+    "properties": {}
+   }
   ]
 }
