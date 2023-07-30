@@ -47,8 +47,49 @@
                     "location": "[parameters('appLocation')]",
                     "kind": "StorageV2",
                     "sku": {
-                        "name": "Standard_LRS"
+                        "name": "Standard_LRS",
+                        "tier": "Standard"
+                    },
+                    "properties": {
+                        "dnsEndpointType": "Standard",
+                        "allowedCopyScope": "AAD",
+                        "defaultToOAuthAuthentication": false,
+                        "publicNetworkAccess": "Enabled",
+                        "allowCrossTenantReplication": false,
+                        "minimumTlsVersion": "TLS1_2",
+                        "allowBlobPublicAccess": true,
+                        "allowSharedKeyAccess": true,
+                        "networkAcls": {
+                            "bypass": "AzureServices",
+                            "virtualNetworkRules": [],
+                            "ipRules": [],
+                            "defaultAction": "Allow"
+                        },
+                        "supportsHttpsTrafficOnly": true,
+                        "encryption": {
+                            "requireInfrastructureEncryption": false,
+                            "services": {
+                                "file": {
+                                    "keyType": "Account",
+                                    "enabled": true
+                                },
+                                "blob": {
+                                    "keyType": "Account",
+                                    "enabled": true
+                                }
+                            },
+                            "keySource": "Microsoft.Storage"
+                        },
+                        "accessTier": "Hot"
                     }
+                },
+                {
+                    "type": "Microsoft.Storage/storageAccounts/blobServices",
+                    "apiVersion": "2022-09-01",
+                    "name": "[concat(variables('storageAccountName'), '/default')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
                 }
             ]
         }
