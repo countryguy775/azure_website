@@ -15,11 +15,18 @@
             "prod"
         ],
         "type": "string"
+    },
+    "indexDocument": {
+        "type": "string"
+    },
+    "errorDocument404Path": {
+        "type": "string"
     }
   },
   "variables": {
     "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
-    "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]"
+    "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
+    "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]"
   },
   "resources": [
    {
@@ -88,6 +95,65 @@
     "dependsOn": [
         "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
     ]
+   },
+   {
+    "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2022-09-01",
+    "name": "enableStaticWebsite",
+    "resourceGroup": "[variables('resourceGroupName')]",
+    "properties": {
+        "mode": "Incremental",
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "resources": [
+                {
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020-10-01",
+                    "name": "enableStaticWeb",
+                    "location": "[resourceGroup().location]",
+                    "kind": "AzurePowerShell",
+                    "properties": {
+                        "azPowerShellVersion": "3.0",
+                        "scriptContent": "
+                            $ErrorActionPreference = 'Stop'\n
+                            $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
+                            $ctx = $StorageAccount.Context\n
+                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
+                         "
+                    },
+                    "retentionInterval": "PT4H",
+                    "environmentVariables": [
+                        {
+                            "name": "ResourceGroupName",
+                            "value": "[variables('resourceGroupName')]"
+                        },
+                        {
+                            "name": "StorageAccountName",
+                            "value": "[variables('storageAccountName')]"
+                        },
+                        {
+                            "name": "IndexDocument",
+                            "value": "[parameters('indexDocument')]"
+                        },
+                        {
+                            "name": "ErrorDocument404Path",
+                            "value": "[parameters('errorDocument404Path')]"
+                        }
+                    ],
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
+                }
+            ],
+            "outputs": {
+                "staticWebsiteUrl": {
+                    "type": "string",
+                    "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web]"
+                }
+            }
+        }
+    }
    }
   ]
 }

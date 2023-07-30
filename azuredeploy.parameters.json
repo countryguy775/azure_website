@@ -10,6 +10,12 @@
         },
         "environment": {
             "value": "dev"
+        },
+        "indexDocument": {
+            "value": "index.html"
+        },
+        "errorDocument404Path": {
+            "value": "error.html"
         }
     }
 }
