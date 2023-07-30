@@ -1,299 +1,31 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "storageAccountName": {
+        "applocation": {
             "type": "string"
         },
-        "resourceGroup": {
+        "appName": {
             "type": "string"
         },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]"
-        },
-        "indexDocumentPath": {
-            "type": "string",
-            "defaultValue": "index.html"
-        },
-        "errorDocument404Path": {
-            "type": "string",
-            "defaultValue": "error.html"
-        },
-        "rolesToAssignManagedIdentity": {
-            "type": "array",
-            "defaultValue": [
-                {
-                    "name": "StorageContributor",
-                    "role": "[concat('/subscription/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]"
-                }
-            ]
+        "environment": {
+            "defaultValue": "dev",
+            "allowedValues": [
+                "dev",
+                "prod"
+            ],
+            "type": "string"
         }
     },
-    "functions": [],
     "variables": {
-        "userAssignedIDName": "configDeployer",
-        "roleAssignmentName": "[guid(concat(resourceGroup().id, 'contributor'))]",
-        "RoleDefinitionID": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]"
+        "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]"
     },
     "resources": [
         {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2019-04-01",
-            "name": "[parameters('storageAccountName')]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "Standard_LRS",
-                "tier": "Standard"
-            },
-            "kind": "StorageV2",
-            "properties": {
-                "dnsEndpointType": "Standard",
-                "allowedCopyScope": "AAD",
-                "defaultToOAuthAuthentication": false,
-                "publicNetworkAccess": "Enabled",
-                "allowCrossTenantReplication": false,
-                "minimumTlsVersion": "TLS1_2",
-                "allowBlobPublicAccess": true,
-                "allowSharedKeyAccess": true,
-                "networkAcls": {
-                    "bypass": "AzureServices",
-                    "virtualNetworkRules": [],
-                    "ipRules": [],
-                    "defaultAction": "Allow"
-                },
-                "supportsHttpsTrafficOnly": true,
-                "encryption": {
-                    "requireInfrastructureEncryption": false,
-                    "services": {
-                        "file": {
-                            "keyType": "Account",
-                            "enabled": true
-                        },
-                        "blob": {
-                            "keyType": "Account",
-                            "enabled": true
-                        }
-                    },
-                    "keySource": "Microsoft.Storage"
-                },
-                "accessTier": "Hot"
-            }
-        },
-        {
-            "type": "Microsoft.Storage/storageAccounts/blobServices",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('storageAccountName'), '/default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('storageAccountName'), '/default/configs')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ],
-            "properties": {
-                "publicAccess": "Blob"
-            }
-        },
-        {
-            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "apiVersion": "2023-01-31",
-            "name": "[variables('userAssignedIDName')]",
-            "location": "[resourceGroup().location]"
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2022-09-01",
-            
-            "resourceGroup": "[parameters('resourceGroup')]",
-            
-            "name": "[concat(parameters('rolesToAssignManagedIdentity')[copyIndex()].name, '_', guid(parameters('rolesToAssignManagedIdentity')[copyIndex()].name))]",
-            "copy": {
-                "name": "rolesCopy",
-                "count": "[length(parameters('rolesToAssignManagedIdentity'))]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))]"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "expressionEvaluationOptions": {
-                    "scope": "Outer"
-                },
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "resources": [
-                        {
-                           "type": "Microsoft.Authorization/roleAssignments",
-                           "apiVersion": "2022-04-01",
-                           "name": "[guid(parameters('rolesToAssignManagedIdentity')[copyIndex()].name)]",
-                           "properties": {
-                            "roleDefinitionId": "[parameters('rolesToAssignManagedIdentity')[copyIndex()].role]",
-                            "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')), '2023-01-31', 'Full').properties.principalId]",
-                            "principalType": "ServicePrincipal"
-                           }
-                        }
-                    ]
-                }
-            }
-    
-        
-        },
-        {
-            "type": "Microsoft.Cdn/profiles",
-            "apiVersion": "2022-11-01-preview",
-            "name": "[parameters('resourceGroup')]",
-            "location": "global",
-            "sku": {
-                "name": "Standard_Microsoft"
-            },
-            "kind": "cdn"
-        },
-        {
-            "type": "Microsoft.Cdn/profiles/endpoints",
-            "apiVersion": "2022-11-01-preview",
-            "name": "[concat(parameters('resourceGroup'), '/hodgesfamilydev')]",
-            "location": "global",
-            "dependsOn": [
-                "[resourceId('Microsoft.Cdn/profiles', parameters('resourceGroup'))]"
-            ],
-            "properties": {
-                "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web), 9))]",
-                "contentTypesToCompress": [
-                    "application/eot",
-                    "application/font",
-                    "application/font-sfnt",
-                    "application/javascript",
-                    "application/json",
-                    "application/opentype",
-                    "application/otf",
-                    "application/pkcs7-mime",
-                    "application/truetype",
-                    "application/ttf",
-                    "application/vnd.ms-fontobject",
-                    "application/xhtml+xml",
-                    "application/xml",
-                    "application/xml+rss",
-                    "application/x-font-opentype",
-                    "application/x-font-truetype",
-                    "application/x-font-ttf",
-                    "application/x-httpd-cgi",
-                    "application/x-javascript",
-                    "application/x-mpegurl",
-                    "application/x-opentype",
-                    "application/x-otf",
-                    "application/x-perl",
-                    "application/x-ttf",
-                    "font/eot",
-                    "font/ttf",
-                    "font/otf",
-                    "font/opentype",
-                    "image/svg+xml",
-                    "text/css",
-                    "text/csv",
-                    "text/html",
-                    "text/javascript",
-                    "text/js",
-                    "text/plain",
-                    "text/richtext",
-                    "text/tab-separated-values",
-                    "text/xml",
-                    "text/x-script",
-                    "text/x-component",
-                    "text/x-java-source"
-                ],
-                "isCompressionEnabled": true,
-                "isHttpAllowed": false,
-                "isHttpsAllowed": true,
-                "queryStringCachingBehavior": "IgnoreQueryString",
-                "origins": [
-                    {
-                        "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web), 9)), '.', '-')]",
-                        "properties": {
-                            "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web), 9))]",
-                            "httpPort": 80,
-                            "httpsPort": 443,
-                            "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web), 9))]",
-                            "priority": 1,
-                            "weight": 1000,
-                            "enabled": true
-                        }
-                    }
-                ],
-                "originGroups": [],
-                "geoFilters": []
-            }
-        },
-        {
-            "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
-            "apiVersion": "2022-11-01-preview",
-            "name": "[concat(parameters('resourceGroup'), '/hodgesfamilydev/dev-thehodgesfamily-net')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('resourceGroup'), 'hodgesfamilydev')]",
-                "[resourceId('Microsoft.Cdn/profiles', parameters('resourceGroup'))]"
-            ],
-            "properties": {
-                "hostName": "dev.thehodgesfamily.net"
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2020-10-01",
-            "name": "enableStaticWeb",
-            "location": "[parameters('location')]",
-            "kind": "AzurePowerShell",
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName')))]": {}
-                }
-            },
-            "properties": {
-                "azPowerShellVersion": "3.0",
-                "scriptContent": "
-                    $ErrorActionPreference = 'Stop'\n
-                    $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:ResourceGroupName -AccountName $env:StorageAccountName\n
-                    $ctx = $StorageAccount.Context\n
-                    Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath -ErrorDocument404Path $env:ErrorDocument404Path\n
-                    
-                ",
-                "retentionInterval": "PT4H",
-                "environmentVariables": [
-                    {
-                        "name": "ResourceGroupName",
-                        "value": "[resourceGroup().name]"
-                    },
-                    {
-                        "name": "StorageAccountName",
-                        "value": "[parameters('storageAccountName')]"
-                    },
-                    {
-                        "name": "IndexDocumentPath",
-                        "value": "[parameters('indexDocumentPath')]"
-                    },
-                    {
-                        "name": "ErrorDocument404Path",
-                        "value": "[parameters('errorDocument404Path')]"
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIDName'))]",
-                
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ]
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "[parameters('applocation')]",
+            "name": "[variables('resourceGroupName')]"
         }
-    ],
-    "outputs": {
-        "staticWebsiteUrl": {
-            "type": "string",
-            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.web]"
-        }
-    }
+    ]
 }
