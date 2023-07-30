@@ -19,7 +19,7 @@
   },
   "variables": {
     "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
-    "storageAccountName": "[concat(parameters('appName'), '-', parameters('environment'), '-storage')]"
+    "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]"
   },
   "resources": [
    {
