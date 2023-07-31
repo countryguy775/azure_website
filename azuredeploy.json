@@ -114,7 +114,7 @@
                     "location": "[resourceGroup().location]",
                     "kind": "AzurePowerShell",
                     "properties": {
-                        "azPowerShellVersion": "3.0",
+                        "azPowerShellVersion": "5.0",
                         "scriptContent": "
                             $ErrorActionPreference = 'Stop'\n
                             $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
