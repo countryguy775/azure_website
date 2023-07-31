@@ -88,28 +88,9 @@
                         },
                         "accessTier": "Hot"
                     }
-                }
-            ]
-        }
-    },
-    "dependsOn": [
-        "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
-    ]
-   },
-   {
-    "type": "Microsoft.Resources/deployments",
-    "apiVersion": "2022-09-01",
-    "name": "enableStaticWebsite",
-    "resourceGroup": "[variables('resourceGroupName')]",
-    "properties": {
-        "mode": "Incremental",
-        "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-            "contentVersion": "1.0.0.0",
-            "apiProfile": "2019-03-01-hybrid",
-            "resources": [
+                },
                 {
-                    "type": "Microsoft.Resources/deploymentScripts",
+                   "type": "Microsoft.Resources/deploymentScripts",
                     "apiVersion": "2020-10-01",
                     "name": "enableStaticWeb",
                     "location": "[resourceGroup().location]",
@@ -144,17 +125,14 @@
                     ],
                     "dependsOn": [
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ]
+                    ] 
                 }
-            ],
-            "outputs": {
-                "staticWebsiteUrl": {
-                    "type": "string",
-                    "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2020-09-01', 'full').primaryEndpoints.web]"
-                }
-            }
+            ]
         }
-    }
+    },
+    "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
+    ]
    }
   ]
 }
