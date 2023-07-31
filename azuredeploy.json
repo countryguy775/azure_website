@@ -96,7 +96,7 @@
                     "location": "[parameters('appLocation')]",
                     "kind": "AzurePowershell",
                     "properties": {
-                        "AzPowershellVersion": "9.0",
+                        "AzPowershellVersion": "5.0",
                         "scriptContent": "'
                             param(
                                 [string] $resourceGroupName,
