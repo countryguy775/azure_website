@@ -88,6 +88,12 @@
                         },
                         "accessTier": "Hot"
                     }
+                },
+                {
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020-10-01",
+                    "name": "enableStaticWebsite",
+                    "location": "[parameters('appLocation')]"
                 }
             ]
         }
