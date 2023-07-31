@@ -40,7 +40,7 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
-    "resourceGroup": "[variables('resourceGroupName')]",
+    
     "properties": {
         "mode": "Incremental",
         "template": {
