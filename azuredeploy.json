@@ -100,13 +100,14 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "enableStaticWeb",
+    "location": "[parameters('appLocation')]",
     "properties": {
         "mode": "Incremental",
         "template": {
             "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
             "resources": [
-                
+
             ]
         }
     }
