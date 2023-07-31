@@ -129,10 +129,7 @@
                                 "value": "[parameters('errorDocument404Path')]"
                             }
                         ]
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ]
+                    }
                     
                 }
             ]
