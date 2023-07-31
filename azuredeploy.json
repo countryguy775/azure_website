@@ -100,7 +100,8 @@
                         "scriptContent": "
                             az storage blob service-properties update --static-website true --index-document index.html\n
                         "
-                    }
+                    },
+                    "retentionInterval": "PT4H"
                 }
             ]
         }
