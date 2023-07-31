@@ -150,7 +150,7 @@
             "outputs": {
                 "staticWebsiteUrl": {
                     "type": "string",
-                    "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web]"
+                    "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2020-09-01', 'full').primaryEndpoints.web]"
                 }
             }
         }
