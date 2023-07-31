@@ -126,7 +126,7 @@
                     "retentionInterval": "PT4H",
                     "environmentVariables": [
                         {
-                            "name": "ResourceGroupName",
+                            "name": "resourceGroupName",
                             "value": "[variables('resourceGroupName')]"
                         },
                         {
