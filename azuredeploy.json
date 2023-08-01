@@ -110,7 +110,19 @@
                         "environmentVariables": [
                             {
                                 "name": "resourceGroupName",
-                                "value": "[variables('resourceGroupName')]"
+                                "value": "mlhwebsite-dev-rg"
+                            },
+                            {
+                                "name": "storageAccountName",
+                                "value": "mlhwebsitedevstorage"
+                            },
+                            {
+                                "name": "indexDocument",
+                                "value": "index.html"
+                            },
+                            {
+                                "name": "errorDocument404Path",
+                                "value": "error.html"
                             }
                         ]
                     }
