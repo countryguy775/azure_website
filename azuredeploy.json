@@ -40,98 +40,10 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
-    "resourceGroup": "[variables('resourceGroupName')]",
-    "properties": {
-        "mode": "Incremental",
-        "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-            "contentVersion": "1.0.0.0",
-            "resources": [
-                {
-                    "type": "Microsoft.Storage/storageAccounts",
-                    "apiVersion": "2022-09-01",
-                    "name": "[variables('storageAccountName')]",
-                    "location": "[parameters('appLocation')]",
-                    "kind": "StorageV2",
-                    "sku": {
-                        "name": "Standard_LRS",
-                        "tier": "Standard"
-                    },
-                    "properties": {
-                        "dnsEndpointType": "Standard",
-                        "allowedCopyScope": "AAD",
-                        "defaultToOAuthAuthentication": false,
-                        "publicNetworkAccess": "Enabled",
-                        "allowCrossTenantReplication": false,
-                        "minimumTlsVersion": "TLS1_2",
-                        "allowBlobPublicAccess": true,
-                        "allowSharedKeyAccess": true,
-                        "networkAcls": {
-                            "bypass": "AzureServices",
-                            "virtualNetworkRules": [],
-                            "ipRules": [],
-                            "defaultAction": "Allow"
-                        },
-                        "supportsHttpsTrafficOnly": true,
-                        "encryption": {
-                            "services": {
-                                "file": {
-                                    "keyType": "Account",
-                                    "enabled": true
-                                },
-                                "blob": {
-                                    "keyType": "Account",
-                                    "enabled": true
-                                }
-                            },
-                            "keySource": "Microsoft.Storage"
-                        },
-                        "accessTier": "Hot"
-                    }
-                },
-                {
-                    "type": "Microsoft.Resources/deploymentScripts",
-                    "apiVersion": "2020-10-01",
-                    "name": "enableStaticWebsite",
-                    "location": "[parameters('appLocation')]",
-                    "kind": "AzurePowerShell",
-                    "properties": {
-                        "azPowerShellVersion": "3.0",
-                        "scriptContent": "
-                            $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
-                            $ctx = $storageAccount.Context\n
-                            Enable-AzStorageStaticWesite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
-                        ",
-                        "retentionInterval": "PT4H",
-                        "environmentVariables": [
-                            {
-                                "name": "resourceGroupName",
-                                "value": "[variables('storageAccountName')]"
-                            },
-                            {
-                                "name": "storageAccountName",
-                                "value": "[variables('storageAccountName')]"
-                            },
-                            {
-                                "name": "indexDocument",
-                                "value": "[parameters('indexDocument')]"
-                            },
-                            {
-                                "name": "errorDocument404Path",
-                                "value": "[parameters('errorDocument404Path')]"
-                            }
-                        ]
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ]
-                }
-            ]
-        }
-    },
-    "dependsOn": [
-        "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
-    ]
+    "location": "[parameters('appLocation')]",
+    "scope": "",
+    "properties": {},
+    
    }
   ]
 }
