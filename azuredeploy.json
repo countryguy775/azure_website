@@ -106,10 +106,10 @@
         "template": {
             "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
-            "apiProfile": "2020-09-01",
             "resources": [
                 {
                     "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020-10-01",
                     "name": "enableStaticWebsite"
                 }
             ]
