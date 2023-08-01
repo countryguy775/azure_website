@@ -101,7 +101,6 @@
     "apiVersion": "2022-09-01",
     "name": "enableStaticWeb",
     "resourceGroup": "[variables('resourceGroupName')]",
-    "location": "[parameters('appLocation')]",
     "properties": {
         "mode": "Incremental",
         "template": {
