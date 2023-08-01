@@ -40,7 +40,6 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
-    "location": "[parameters('appLocation')]",
     
     "properties": {
         "expressionEvaluationOptions": {
