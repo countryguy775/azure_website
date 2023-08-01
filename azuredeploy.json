@@ -93,44 +93,17 @@
                     }
                 },
                 {
-                    "type": "Microsoft.Resources/deploymentScripts",
-                    "apiVersion": "2020-10-01",
-                    "name": "staticWeb",
-                    "location": "East US",
-                    "kind": "AzurePowerShell",
-                    "properties": {
-                        "azPowerShellVersion": "3.0",
-                        "retentionInterval": "PT4H",
-                        "scriptContent": "
-                            $ErrorActionPreference = 'Stop'\n
-                            $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
-                            $ctx = $StorageAccount.Context\n
-                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocumentPath -ErrorDocument404Path $env:errorDocument404Path\n
-                        ",
-                        "environmentVariables": [
-                            {
-                                "name": "resourceGroupName",
-                                "value": "mlhwebsite-dev-rg"
-                            },
-                            {
-                                "name": "storageAccountName",
-                                "value": "mlhwebsitedevstorage"
-                            },
-                            {
-                                "name": "indexDocument",
-                                "value": "index.html"
-                            },
-                            {
-                                "name": "errorDocument404Path",
-                                "value": "error.html"
-                            }
-                        ]
+                    "type": "Microsoft.Cdn/profiles",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[variables('cdnProfileName')]",
+                    "location": "global",
+                    "sku": {
+                        "name": "Standard_Microsoft"
                     }
                 }
             ]
         }
-    },
-    "resourceGroup": "[variables('resourceGroupName')]"
+    }
    }
   ]
 }
