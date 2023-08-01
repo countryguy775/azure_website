@@ -100,7 +100,7 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "enableStaticWeb",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters('appLocation')]",
     "properties": {
         "mode": "Incremental",
         "template": {
