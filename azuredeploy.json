@@ -88,6 +88,43 @@
                         },
                         "accessTier": "Hot"
                     }
+                },
+                {
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020.10-01",
+                    "name": "enableStaticWebsite",
+                    "location": "[resourceGroup().location]",
+                    "kind": "AzurePowerShell",
+                    "properties": {
+                        "azPowerShellVersion": "3.0",
+                        "scriptContent": "
+                            $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
+                            $ctx = $storageAccount.Context\n
+                            Enable-AzStorageStaticWesite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
+                        ",
+                        "retentionInterval": "PT4H",
+                        "environmentVariables": [
+                            {
+                                "name": "resourceGroupName",
+                                "value": "[resourceGroup().name]"
+                            },
+                            {
+                                "name": "storageAccountName",
+                                "value": "[variables('storageAccountName')]"
+                            },
+                            {
+                                "name": "indexDocument",
+                                "value": "[parameters('indexDocument')]"
+                            },
+                            {
+                                "name": "errorDocument404Path",
+                                "value": "[parameters('errorDocument404Path')]"
+                            }
+                        ]
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
                 }
             ]
         }
