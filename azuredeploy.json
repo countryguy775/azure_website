@@ -95,55 +95,6 @@
     "dependsOn": [
         "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
     ]
-   },
-   {
-    "type": "Microsoft.Resources/deployments",
-    "apiVersion": "2022-09-01",
-    "name": "enableStaticWeb",
-    "location": "[parameters('appLocation')]",
-    "properties": {
-        "mode": "Incremental",
-        "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
-            "contentVersion": "1.0.0.0",
-            "resources": [
-                {
-                    "type": "Microsoft.Resources/deploymentScripts",
-                    "apiVersion": "2020-10-01",
-                    "name": "enableStaticWebsite",
-                    "location": "[parameters('appLocation')]",
-                    "kind": "AzurePowershell",
-                    "properties": {
-                        "azurePowershellVersion": "3.0",
-                        "scriptContent": "
-                            $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
-                            $ctx = $storageAccount.Context\n
-                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
-                        ",
-                        "retentionInterval": "PT4H",
-                        "environmentVariables": [
-                            {
-                                "name": "resourceGroupName",
-                                "value": "[variables('resourceGroupName')]"
-                            },
-                            {
-                                "name": "storageAccountName",
-                                "value": "[variables('storageAccountName')]"
-                            },
-                            {
-                                "name": "indexDocument",
-                                "value": "[parameters('indexDocument')]"
-                            },
-                            {
-                                "name": "errorDocument404Path",
-                                "value": "[parameters('errorDocument404Path')]"
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    }
    }
   ]
 }
