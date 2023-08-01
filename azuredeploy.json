@@ -103,10 +103,16 @@
                         "retentionInterval": "PT4H",
                         "scriptContent": "
                             $ErrorActionPreference = 'Stop'\n
-                            $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:ResourceGroupName -AccountName $env:StorageAccountName\n
+                            $StorageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
                             $ctx = $StorageAccount.Context\n
-                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath -ErrorDocument404Path $env:ErrorDocument404Path\n
-                        "
+                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocumentPath -ErrorDocument404Path $env:errorDocument404Path\n
+                        ",
+                        "environmentVariables": [
+                            {
+                                "name": "resourceGroupName",
+                                "value": "[variables('resourceGroupName')]"
+                            }
+                        ]
                     }
                 }
             ]
