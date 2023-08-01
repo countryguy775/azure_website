@@ -44,12 +44,12 @@
     "properties": {
         "mode": "Incremental",
         "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
             "resources": [
                 {
                     "type": "Microsoft.Storage/storageAccounts",
-                    "apiVersion": "2023-01-01",
+                    "apiVersion": "2022-09-01",
                     "name": "[variables('storageAccountName')]",
                     "location": "[parameters('appLocation')]",
                     "kind": "StorageV2",
@@ -91,7 +91,7 @@
                 },
                 {
                     "type": "Microsoft.Resources/deploymentScripts",
-                    "apiVersion": "2020.10-01",
+                    "apiVersion": "2020-10-01",
                     "name": "enableStaticWebsite",
                     "location": "[parameters('appLocation')]",
                     "kind": "AzurePowerShell",
