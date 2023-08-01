@@ -107,10 +107,7 @@
                             $ctx = $StorageAccount.Context\n
                             Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:IndexDocumentPath -ErrorDocument404Path $env:ErrorDocument404Path\n
                         "
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ]
+                    }
                 }
             ]
         }
