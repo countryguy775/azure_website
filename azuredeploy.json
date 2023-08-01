@@ -41,7 +41,7 @@
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
     "location": "[parameters('appLocation')]",
-    "scope": "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]",
+    
     "properties": {
         "expressionEvaluationOptions": {
             "scope": "Outer"
@@ -97,7 +97,8 @@
                 }
             ]
         }
-    }
+    },
+    "resourceGroup": "[variables('resourceGroupName')]"
    }
   ]
 }
