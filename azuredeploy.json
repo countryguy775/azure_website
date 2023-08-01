@@ -91,15 +91,6 @@
                         },
                         "accessTier": "Hot"
                     }
-                },
-                {
-                    "type": "Microsoft.Cdn/profiles",
-                    "apiVersion": "2022-11-01-preview",
-                    "name": "[variables('cdnProfileName')]",
-                    "location": "global",
-                    "sku": {
-                        "name": "Standard_Microsoft"
-                    }
                 }
             ]
         }
