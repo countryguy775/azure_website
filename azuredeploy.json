@@ -100,7 +100,6 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "enableStaticWeb",
-    "resourceGroup": "[variables('resourceGroupName')]",
     "properties": {
         "mode": "Incremental",
         "template": {
