@@ -40,7 +40,7 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
-    "location": "[parameters('appLocation')]",
+    "location": "eastus",
     "properties": {
         "mode": "Incremental",
         "template": {
