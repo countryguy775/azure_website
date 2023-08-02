@@ -72,8 +72,7 @@
                     "name": "[concat(variables('cdnProfileName'), '/devhodgesfamily')]",
                     "location": "[parameters('appLocation')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                        "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]"
                     ]
                 }
             ]
