@@ -78,8 +78,8 @@
                 "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
                 "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
                 "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
-                "endPointName": "[concat( parameters('environment'), 'hodgesfamily')]",
-                "customDomainName": "[concat(variables('endPointName'), '/dev-thehodgesfamily-net')]"
+                "endPointName": "[concat(parameters('environment'), 'hodgesfamily')]",
+                "customDomainName": "dev-thehodgesfamily-net"
             },
             "resources": [
                 {
@@ -172,7 +172,7 @@
                 {
                     "type": "Microsoft.Cdn/profiles/endpoints",
                     "apiVersion": "2022-11-01-preview",
-                    "name": "[variables('endPointName')]",
+                    "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'))]",
                     "location": "[parameters('appLocation')]",
                     "properties": {
                         "origins": [
@@ -183,15 +183,12 @@
                                 }
                             }
                         ]
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]"
-                    ]
+                    }
                 },
                 {
                     "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
                     "apiVersion": "2022-11-01-preview",
-                    "name": "[variables('customDomainName')]",
+                    "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'), '/', variables('customDomainName'))]",
                     "properties": {
                         "hostName": "dev.thehodgesfamily.net"
                     }
