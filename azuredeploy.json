@@ -77,7 +77,8 @@
             "variables": {
                 "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
                 "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
-                "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]"
+                "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
+                "endPointName": "[concat(variables('resourceGroupName'), '/', parameters('environment'), 'hodgesfamily')]"
             },
             "resources": [
                 {
@@ -166,6 +167,25 @@
                         "name": "Standard_Microsoft"
                     },
                     "properties": {}
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles/endpoints",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[variables('endPointName')]",
+                    "location": "[parameters('appLocation')]",
+                    "properties": {
+                        "origins": [
+                            {
+                                "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9)), '.', '-')]",
+                                "properties": {
+                                    "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))).primaryEndpoints.web), 9))]"
+                                }
+                            }
+                        ]
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]"
+                    ]
                 }
             ],
             "outputs": {
