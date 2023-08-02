@@ -51,13 +51,25 @@
             "parameters": {
                 "appLocation": {
                     "type": "string",
-                    "defaultValue": "[parameters('appLocation')]"
+                    "defaultValue": "[resourceGroup().location]"
+                },
+                "appName": {
+                    "type": "string",
+                    "defaultValue": "mlhwebsite"
+                },
+                "environment": {
+                    "type": "string",
+                    "defaultValue": "dev",
+                    "allowedValues": [
+                        "dev",
+                        "prod"
+                    ]
                 }
             },
             "variables": {
-                "storageAccountName": {
-                    "type": "string"
-                }
+                "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
+                "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
+                "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]"
             },
             "resources": [
                 {
