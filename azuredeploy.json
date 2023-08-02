@@ -122,12 +122,12 @@
                         "queryStringCachingBehavior": "IgnoreQueryString",
                         "origins": [
                             {
-                                "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9)), '.', '-')]",
+                                "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9)), '.', '-')]",
                                 "properties": {
-                                    "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9))]",
+                                    "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9))]",
                                     "httpPort": 80,
                                     "httpsPort": 443,
-                                    "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9))]",
+                                    "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9))]",
                                     "priority": 1,
                                     "weight": 1000,
                                     "enabled": true
