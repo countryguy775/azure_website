@@ -44,19 +44,18 @@
     "properties": {
         "mode": "Incremental",
         "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/DeploymentTemplate.json#",
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/DeploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
             "resources": [
                 {
-                    "type": "Microsoft.Resources/storageAccounts",
-                    "apiVersion": "2019-06-01",
-                    "name": "[variables('resourceGroupName')]",
-                    "location": "[parameters('appLocation')]",
-                    "sku": {
-                        "name": "Standard_Microsoft"
-                    },
+                    "type": "Microsoft.Storage/storageAccounts",
+                    "apiVersion": "2022-09-01",
+                    "name": "[variables('storageAccountName')]",
+                    "location": "East US",
                     "kind": "StorageV2",
-                    "properties": {}
+                    "sku": {
+                        "name": "Standard_LRS"
+                    }
                 }
             ]
         }
