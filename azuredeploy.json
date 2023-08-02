@@ -55,6 +55,16 @@
                     "sku": {
                         "name": "Standard_LRS"
                     }
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[variables('cdnProfileName')]",
+                    "location": "[parameters('appLocation')]",
+                    "sku": {
+                        "name": "Standard_Microsoft"
+                    },
+                    "properties": {}
                 }
             ]
         }
