@@ -64,7 +64,20 @@
                     "sku": {
                         "name": "Standard_Microsoft"
                     },
-                    "properties": {}
+                    "properties": {},
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles/endpoints",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[concat(variables('cdnProfileName'), '/devhodgesfamily')]",
+                    "location": "[parameters('appLocation')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
                 }
             ]
         }
