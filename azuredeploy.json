@@ -176,6 +176,9 @@
             }
         }
     },
+    "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups', variables('resourceGroupName'))]"
+    ],
     "resourceGroup": "[variables('resourceGroupName')]"
    }
   ]
