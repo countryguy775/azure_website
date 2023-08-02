@@ -78,7 +78,7 @@
                 "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
                 "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
                 "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
-                "endPointName": "[concat(variables('resourceGroupName'), '/', parameters('environment'), 'hodgesfamily')]"
+                "endPointName": "[concat(variables('cdnProfileName'), '/', parameters('environment'), 'hodgesfamily')]"
             },
             "resources": [
                 {
