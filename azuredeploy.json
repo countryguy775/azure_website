@@ -40,58 +40,22 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
-    "location": "[parameters('appLocation')]",
     "properties": {
-        "expressionEvaluationOptions": {
-            "scope": "Outer"
-        },
         "mode": "Incremental",
-        "parameters": {},
         "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymenttemplate.json#",
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/DeploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
             "resources": [
                 {
-                    "type": "Microsoft.Storage/storageAccounts",
-                    "apiVersion": "2022-09-01",
-                    "name": "[variables('storageAccountName')]",
+                    "type": "Microsoft.Resources/storageAccounts",
+                    "apiVersion": "2019-06-01",
+                    "name": "[variables('resourceGroupName')]",
                     "location": "[parameters('appLocation')]",
                     "sku": {
-                        "name": "Standard_LRS",
-                        "tier": "Standard"
+                        "name": "Standard_Microsoft"
                     },
                     "kind": "StorageV2",
-                    "properties": {
-                        "dnsEndpointType": "Standard",
-                        "allowedCopyScope": "AAD",
-                        "defaultToOAuthAuthentication": false,
-                        "publicNetworkAccess": "Enabled",
-                        "allowCrossTenantReplication": false,
-                        "minimumTlsVersion": "TLS1_2",
-                        "allowBlobPublicAccess": true,
-                        "allowSharedKeyAccess": true,
-                        "networkAcls": {
-                            "bypass": "AzureServices",
-                            "virtualNetworkRules": [],
-                            "ipRules": [],
-                            "defaultAction": "Allow"
-                        },
-                        "supportsHttpsTrafficOnly": true,
-                        "encryption": {
-                            "services": {
-                                "file": {
-                                    "keyType": "Account",
-                                    "enabled": true
-                                },
-                                "blob": {
-                                    "keyType": "Account",
-                                    "enabled": true
-                                }
-                            },
-                            "keySource": "Microsoft.Storage"
-                        },
-                        "accessTier": "Hot"
-                    }
+                    "properties": {}
                 }
             ]
         }
