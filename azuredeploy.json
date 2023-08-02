@@ -54,6 +54,34 @@
                     "kind": "StorageV2",
                     "sku": {
                         "name": "Standard_LRS"
+                    },
+                    "properties": {
+                        "dnsEndpointType": "Standard",
+                        "allowedCopyScope": "AAD",
+                        "defaultToOAuthAuthentication": false,
+                        "publicNetworkAccess": "Enabled",
+                        "allowCrossTenantReplication": false,
+                        "minimumTlsVersion": "TLS1_2",
+                        "allowBlobPublicAccess": true,
+                        "allowSharedKeyAccess": true,
+                        "networkAcls": {
+                            "bypass": "AzureServices",
+                            "defaultAction": "Allow"
+                        },
+                        "supportsHttpsTrafficOnly": true,
+                        "encryption": {
+                            "services": {
+                                "file": {
+                                    "keyType": "Account",
+                                    "enabled": true
+                                },
+                                "blob": {
+                                    "keyType": "Account",
+                                    "enabled": true
+                                }
+                            },
+                            "keySource": "Microsoft.Storage"
+                        }
                     }
                 },
                 {
