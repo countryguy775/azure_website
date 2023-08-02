@@ -40,7 +40,6 @@
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
     "name": "storageDeployment",
-    "location": "eastus",
     "properties": {
         "mode": "Incremental",
         "template": {
@@ -59,7 +58,8 @@
                 }
             ]
         }
-    }
+    },
+    "resourceGroup": "[variables('resourceGroupName')]"
    }
   ]
 }
