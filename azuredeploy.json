@@ -81,6 +81,12 @@
                     "sku": {
                         "name": "Standard_LRS"
                     }
+                },
+                {
+                    "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+                    "apiVersion": "2023-01-31",
+                    "name": "ScriptRunner",
+                    "location": "[parameters('appLocation')]"
                 }
             ]
         }
