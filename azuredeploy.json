@@ -64,10 +64,7 @@
                     "sku": {
                         "name": "Standard_Microsoft"
                     },
-                    "properties": {},
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ]
+                    "properties": {}
                 },
                 {
                     "type": "Microsoft.Cdn/profiles/endpoints",
