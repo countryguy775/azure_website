@@ -93,6 +93,17 @@
                         "name": "Standard_Microsoft"
                     },
                     "properties": {}
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles/endpoints",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[concat(variables('resourceGroupName'), '/devhodgesfamily')]",
+                    "location": "[parameters('appLocation')]",
+                    "properties": {
+                        "origins": [
+                            
+                        ]
+                    }
                 }
             ]
         }
