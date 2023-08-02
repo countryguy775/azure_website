@@ -50,7 +50,8 @@
             "contentVersion": "1.0.0.0",
             "resources": []
         }
-    }
+    },
+    "resourceGroup": "[variables('resourceGroupName')]"
    }
   ]
 }
