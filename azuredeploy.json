@@ -39,122 +39,18 @@
    {
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2022-09-01",
-    "name": "storageDeployment",
+    "name": "storageDeploy",
     "properties": {
         "mode": "Incremental",
         "expressionEvaluationOptions": {
             "scope": "Inner"
         },
-        "parameters": {
-            "appLocation": {
-                "value": "[parameters('appLocation')]"
-            }
-        },
-        "variables": {
-            "resourceGroupName": {
-                "type": "string"
-            },
-            "storageAccountName": {
-                "type": "string"
-            },
-            "cdnProfileName": {
-                "type": "string"
-            }
-        },
         "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/DeploymentTemplate.json#",
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
-            "parameters": {
-                "appLocation": {
-                    "type": "string"
-                }
-            },
-            "variables": {
-                "resourceGroupName": {
-                    "type": "string"
-                },
-                "storageAccountName": {
-                    "type": "string"
-                },
-                "cdnProfileName": {
-                    "type": "string"
-                }
-            },
-            "resources": [
-                {
-                    "type": "Microsoft.Storage/storageAccounts",
-                    "apiVersion": "2022-09-01",
-                    "name": "[variables('storageAccountName')]",
-                    "location": "East US",
-                    "kind": "StorageV2",
-                    "sku": {
-                        "name": "Standard_LRS"
-                    },
-                    "properties": {
-                        "dnsEndpointType": "Standard",
-                        "allowedCopyScope": "AAD",
-                        "defaultToOAuthAuthentication": false,
-                        "publicNetworkAccess": "Enabled",
-                        "allowCrossTenantReplication": false,
-                        "minimumTlsVersion": "TLS1_2",
-                        "allowBlobPublicAccess": true,
-                        "allowSharedKeyAccess": true,
-                        "networkAcls": {
-                            "bypass": "AzureServices",
-                            "defaultAction": "Allow"
-                        },
-                        "supportsHttpsTrafficOnly": true,
-                        "encryption": {
-                            "services": {
-                                "file": {
-                                    "keyType": "Account",
-                                    "enabled": true
-                                },
-                                "blob": {
-                                    "keyType": "Account",
-                                    "enabled": true
-                                }
-                            },
-                            "keySource": "Microsoft.Storage"
-                        }
-                    }
-                },
-                {
-                    "type": "Microsoft.Cdn/profiles",
-                    "apiVersion": "2022-11-01-preview",
-                    "name": "[variables('cdnProfileName')]",
-                    "location": "[parameters('appLocation')]",
-                    "sku": {
-                        "name": "Standard_Microsoft"
-                    },
-                    "properties": {}
-                },
-                {
-                    "type": "Microsoft.Cdn/profiles/endpoints",
-                    "apiVersion": "2022-11-01-preview",
-                    "name": "[concat(variables('resourceGroupName'), '/devhodgesfamily')]",
-                    "location": "[parameters('appLocation')]",
-                    "properties": {
-                        "origins": [
-                            {
-                                "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-0601').primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9)), '.', '-')]",
-                                "properties": {
-                                    "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9))]",
-                                    "httpPort": 80,
-                                    "httpsPort": 443,
-                                    "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9))]",
-                                    "priority": 1,
-                                    "weight": 1000,
-                                    "enabled": true
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
+            "resources": []
         }
-    },
-    "resourceGroup": "[variables('resourceGroupName')]"
+    }
    }
   ]
 }
