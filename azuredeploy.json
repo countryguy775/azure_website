@@ -194,10 +194,7 @@
                     "name": "[variables('customDomainName')]",
                     "properties": {
                         "hostName": "dev.thehodgesfamily.net"
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Cdn/profiles/endpoints', variables('endPointName'))]"
-                    ]
+                    }
                 }
             ],
             "outputs": {
