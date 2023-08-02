@@ -72,7 +72,7 @@
                     "name": "[concat(variables('cdnProfileName'), '/devhodgesfamily')]",
                     "location": "[parameters('appLocation')]",
                     "properties": {
-                        "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9))]",
+                        "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').primaryEndpoints.web), 9))]",
                         "contentTypesToCompress": [
                             "application/eot",
                             "application/font",
