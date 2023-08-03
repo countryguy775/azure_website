@@ -178,8 +178,7 @@
                         "principalType": "ServicePrincipal"
                     },
                     "dependsOn": [
-                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
-                        "[resourceId('Microsoft.Cdn/profiles/endpoints', variables('cdnProfileName'), variables('endPointName'))]"
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]"
                     ]
                 },
                 {
