@@ -84,7 +84,7 @@
                 "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
                 "endPointName": "[concat(parameters('environment'), 'hodgesfamily')]",
                 "customDomainName": "dev-thehodgesfamily-net",
-                "convertedUri": "[concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/resourcegroups/', variables('resourceGroupName'), '/providers/microsoft.cdn/profiles/', variables('cdnProfileName'), '/endpoints/', variables('endPointName'), '/customdomains/', variables('customDomainName'), '/enablecustomhttps?api-version=2018-04-02')]"
+                "convertedUri": "[concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/resourcegroups/', variables('resourceGroupName'), '/providers/microsoft.cdn/profiles/', variables('cdnProfileName'), '/endpoints/', variables('endPointName'), '/customdomains/', variables('customDomainName'), '/enablecustomhttps?api-version=2023-05-01')]"
             },
             "resources": [
                 {
@@ -171,7 +171,7 @@
                             $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
                             $ctx = $storageAccount.Context\n
                             Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
-                            Invoke-WebRequest -URI $env:url
+                            $result = Invoke-WebRequest -URI $env:url -Method Post
                         ",
                         "retentionInterval": "PT4H",
                         "environmentVariables": [
