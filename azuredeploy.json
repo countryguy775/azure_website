@@ -171,7 +171,6 @@
                             $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
                             $ctx = $storageAccount.Context\n
                             Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
-                            $result = Invoke-WebRequest -URI $env:url -Method Post
                         ",
                         "retentionInterval": "PT4H",
                         "environmentVariables": [
