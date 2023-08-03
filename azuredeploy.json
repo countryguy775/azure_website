@@ -171,6 +171,7 @@
                             $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
                             $ctx = $storageAccount.Context\n
                             Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
+                            Enable-AzCdnCustomDomainCustomHttps -ResourceGroupName $env:resourceGroupName -ProfileName $env:cdnProfileName -EndpointName $env:endpointName -CustomDomainName dev-thehodgesfamily-net\n
                         ",
                         "retentionInterval": "PT4H",
                         "environmentVariables": [
@@ -189,6 +190,14 @@
                             {
                                 "name": "errorDocument404Path",
                                 "value": "[parameters('errorDocument404Path')]"
+                            },
+                            {
+                                "name": "cdnProfileName",
+                                "value": "[variables('cdnProfileName')]"
+                            },
+                            {
+                                "name": "endpointName",
+                                "value": "[variables('endPointName')]"
                             },
                             {
                                 "name": "url",
@@ -217,20 +226,7 @@
                     "properties": {
                         "azPowerShellVersion": "3.0",
                         "scriptContent": "
-                            $cdnProfile = Get-AzCdnProfile -ProfileName 'mlhwebsite-dev-cdnp'\n
-                            $resourceGroup = Get-AzResourceGroup -Name 'mlhwebsite-dev-cdnp'.ResourceGroupName\n
-                            $resourceGroupName = $resourceGroup.ResourceGroupName\n
-                            $context = Get-AzContext\n
-                            $subscriptionId = $context.subscription.id\n
-                            $azProfile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile\n
-                            $profileClient = New-Object Microsoft.Azure.Commands.ResourceManager.Common.RMProfileClient($azProfile)\n
-                            $token = $profileClient.AcquireAccessToken($context.Subscription.TenantId)\n
-                            $accessToken = $token.AccessToken\n
-                            $provisionUri = 'https://management.azure.com/subscriptions/$($subscriptionId)/resourcegroups/$($resourceGroupName)/providers/microsoft.cdn/profiles/$($cdnProfileName)/endpoints/devhodgesfamily/customdomains/dev-thehodgesfamily-net/enablecustomhttps?api-version=2018-04-02'\n
-                            
-                            $headers = @{}\n
-                            $headers.add('Authorization', 'Bearer $accessToken')\n
-                            Invoke-RestMethod -Method Post -Uri $provisionUri -Headers $headers\n
+                            Enable-AzCdnCustomDomainCustomHttps
                         ",
                         "retentionInterval": "PT4H"
                     }
