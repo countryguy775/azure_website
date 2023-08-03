@@ -231,7 +231,8 @@
                             $headers = @{}\n
                             $headers.add('Authorization', 'Bearer $accessToken')\n
                             Invoke-RestMethod -Method Post -Uri $provisionUri -Headers $headers\n
-                        "
+                        ",
+                        "retentionInterval": "PT4H"
                     }
                 }
             ],
