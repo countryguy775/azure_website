@@ -165,7 +165,7 @@
                         }
                     },
                     "properties": {
-                        "azPowerShellVersion": "10.2",
+                        "azPowerShellVersion": "10.0",
                         "scriptContent": "
                             $ErrorActionPreference = 'Stop'\n
                             $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
