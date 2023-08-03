@@ -72,6 +72,10 @@
                 "errorDocument404Path": {
                     "type": "string",
                     "defaultValue": "error.html"
+                },
+                "subscriptionId": {
+                    "type": "string",
+                    "defaultValue": "[subscription().id]"
                 }
             },
             "variables": {
@@ -79,7 +83,8 @@
                 "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
                 "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
                 "endPointName": "[concat(parameters('environment'), 'hodgesfamily')]",
-                "customDomainName": "dev-thehodgesfamily-net"
+                "customDomainName": "dev-thehodgesfamily-net",
+                "convertedUri": "[concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/resourcegroups/', variables('resourceGroupName'), '/providers/microsoft.cdn/profiles/', variables('cdnProfileName'), '/endpoints/', variables('endPointName'), '/customdomains/', variables('customDomainName'), '/enablecustomhttps?api-version=2018-04-02')]"
             },
             "resources": [
                 {
@@ -110,52 +115,6 @@
                     },
                     "dependsOn": [
                         "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ]
-                },
-                {
-                    "type": "Microsoft.Resources/deploymentScripts",
-                    "apiVersion": "2020-10-01",
-                    "name": "deploymentScript",
-                    "location": "[parameters('appLocation')]",
-                    "kind": "AzurePowerShell",
-                    "identity": {
-                        "type": "UserAssigned",
-                        "userAssignedIdentities": {
-                            "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'))]": {}
-                        }
-                    },
-                    "properties": {
-                        "azPowerShellVersion": "3.0",
-                        "scriptContent": "
-                            $ErrorActionPreference = 'Stop'\n
-                            $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
-                            $ctx = $storageAccount.Context\n
-                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
-                        ",
-                        "retentionInterval": "PT4H",
-                        "environmentVariables": [
-                            {
-                                "name": "resourceGroupName",
-                                "value": "[resourceGroup().name]"
-                            },
-                            {
-                                "name": "storageAccountName",
-                                "value": "[variables('storageAccountName')]"
-                            },
-                            {
-                                "name": "indexDocument",
-                                "value": "[parameters('indexDocument')]"
-                            },
-                            {
-                                "name": "errorDocument404Path",
-                                "value": "[parameters('errorDocument404Path')]"
-                            }
-                        ]
-                    },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
-                        "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
                     ]
                 },
@@ -192,6 +151,57 @@
                     "properties": {
                         "hostName": "dev.thehodgesfamily.net"
                     }
+                },
+                {
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020-10-01",
+                    "name": "deploymentScript",
+                    "location": "[parameters('appLocation')]",
+                    "kind": "AzurePowerShell",
+                    "identity": {
+                        "type": "UserAssigned",
+                        "userAssignedIdentities": {
+                            "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'))]": {}
+                        }
+                    },
+                    "properties": {
+                        "azPowerShellVersion": "3.0",
+                        "scriptContent": "
+                            $ErrorActionPreference = 'Stop'\n
+                            $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
+                            $ctx = $storageAccount.Context\n
+                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
+                            Invoke-WebRequest -URI $env:url
+                        ",
+                        "retentionInterval": "PT4H",
+                        "environmentVariables": [
+                            {
+                                "name": "resourceGroupName",
+                                "value": "[resourceGroup().name]"
+                            },
+                            {
+                                "name": "storageAccountName",
+                                "value": "[variables('storageAccountName')]"
+                            },
+                            {
+                                "name": "indexDocument",
+                                "value": "[parameters('indexDocument')]"
+                            },
+                            {
+                                "name": "errorDocument404Path",
+                                "value": "[parameters('errorDocument404Path')]"
+                            },
+                            {
+                                "name": "url",
+                                "value": "[variables('convertedUri')]"
+                            }
+                        ]
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
+                        "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
                 }
             ],
             "outputs": {
