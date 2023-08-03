@@ -121,7 +121,7 @@
                 {
                     "type": "Microsoft.Authorization/roleAssignments",
                     "apiVersion": "2022-04-01",
-                    "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
+                    "scope": "[format('Microsoft.Cdn/profiles/{0}', variables('cdnProfileName'))]",
                     "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432'))]",
                     "properties": {
                         "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432')]",
