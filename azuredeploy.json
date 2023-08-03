@@ -201,6 +201,38 @@
                         "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
                     ]
+                },
+                {
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020-10-01",
+                    "name": "customHttps",
+                    "location": "[parameters('appLocation')]",
+                    "kind": "AzurePowerShell",
+                    "identity": {
+                        "type": "UserAssigned",
+                        "userAssignedIdentities": {
+                            "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','ScriptRunner'))]": {}
+                        }
+                    },
+                    "properties": {
+                        "azPowerShellVersion": "3.0",
+                        "scriptContent": "
+                            $cdnProfile = Get-AzCdnProfile -ProfileName 'mlhwebsite-dev-cdnp'\n
+                            $resourceGroup = Get-AzResourceGroup -Name 'mlhwebsite-dev-cdnp'.ResourceGroupName\n
+                            $resourceGroupName = $resourceGroup.ResourceGroupName\n
+                            $context = Get-AzContext\n
+                            $subscriptionId = $context.subscription.id\n
+                            $azProfile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile\n
+                            $profileClient = New-Object Microsoft.Azure.Commands.ResourceManager.Common.RMProfileClient($azProfile)\n
+                            $token = $profileClient.AcquireAccessToken($context.Subscription.TenantId)\n
+                            $accessToken = $token.AccessToken\n
+                            $provisionUri = 'https://management.azure.com/subscriptions/$($subscriptionId)/resourcegroups/$($resourceGroupName)/providers/microsoft.cdn/profiles/$($cdnProfileName)/endpoints/devhodgesfamily/customdomains/dev-thehodgesfamily-net/enablecustomhttps?api-version=2018-04-02'\n
+                            
+                            $headers = @{}\n
+                            $headers.add('Authorization', 'Bearer $accessToken')\n
+                            Invoke-RestMethod -Method Post -Uri $provisionUri -Headers $headers\n
+                        "
+                    }
                 }
             ],
             "outputs": {
