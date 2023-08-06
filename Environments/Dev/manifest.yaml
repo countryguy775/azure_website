@@ -3,5 +3,5 @@ name: Dev
 version: 1.0.0
 summary: Empty dev environment
 description: Deploys an empty dev environment
-runner: ARM
+runner: ubuntu-latest
 templatePath: azuredeploy_dev.json
