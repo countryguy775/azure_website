@@ -4,4 +4,4 @@ version: 1.0.0
 summary: Empty dev environment
 description: Deploys an empty dev environment
 runner: ARM
-templatePath: azuredeploy.json
+templatePath: azuredeploy_dev.json
