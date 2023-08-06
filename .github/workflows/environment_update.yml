@@ -6,8 +6,12 @@ permissions:
 
 on:
   push:
+    paths:
+      - 'MLH.Website/**'
   pull_request:
     types: [synchronize]
+    paths:
+      - 'MLH.Website/**'
 
 concurrency: ${{ github.event.number || github.ref_name }}
 
@@ -31,6 +35,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Build ADE.Tutorial
+        run: dotnet publish ./ADE.Tutorial -c Release -o ./publish && (cd ./publish && zip -r ../publish.zip .)
 
       - name: Install DevCenter CLI Extension
         run: az extension add --name devcenter --upgrade
