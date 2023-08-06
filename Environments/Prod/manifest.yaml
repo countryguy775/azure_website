@@ -4,4 +4,4 @@ version: 1.0.0
 summary: Empty Prod environment
 description: Deploys an empty prod environment
 runner: ARM
-templatePath: azuredeploy.json
+templatePath: azuredeploy_prod.json
