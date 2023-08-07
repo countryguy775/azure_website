@@ -1,1 +1,7 @@
 
+name: StaticWebsite
+version: 1.0.0
+summary: Static Website
+description: Deploys an empty sandbox environment
+runner: ubuntu-latest
+templatePath: azuredeploy.json
