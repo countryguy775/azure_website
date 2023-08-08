@@ -34,7 +34,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2022-09-01",
-            "name": "[variables('storageAccountName')]",
+            "name": "mlhwebsitestorage",
             "location": "[parameters('appLocation')]",
             "kind": "StorageV2",
             "sku": {
