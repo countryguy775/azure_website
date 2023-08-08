@@ -13,6 +13,9 @@
         },
         "errorDocument404Path": {
             "value": "error.html"
+        },
+        "environment": {
+            "value": "dev"
         }
     }
 }
