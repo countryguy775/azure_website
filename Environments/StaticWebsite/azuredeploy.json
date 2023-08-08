@@ -25,19 +25,10 @@
         "errorDocument404Path": {
             "type": "string",
             "defaultValue": "error.html"
-        },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "[subscription().id]"
         }
     },
     "variables": {
-        "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
-        "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
-        "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
-        "endPointName": "[concat(parameters('environment'), 'hodgesfamily')]",
-        "customDomainName": "dev-thehodgesfamily-net",
-        "convertedUri": "[concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/resourcegroups/', variables('resourceGroupName'), '/providers/microsoft.cdn/profiles/', variables('cdnProfileName'), '/endpoints/', variables('endPointName'), '/customdomains/', variables('customDomainName'), '/enablecustomhttps?api-version=2023-05-01')]"
+        "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]"
     },
     "resources": [
         {
