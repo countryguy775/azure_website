@@ -23,7 +23,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[concat(parameters('appName'), 'storage')]"
+        "storageAccountName": "[take(toLower(replace(replace(replace(parameters('name'), ' ', ''), '-', ''), '_', '')), 24)]"
     },
     "resources": [
         {
