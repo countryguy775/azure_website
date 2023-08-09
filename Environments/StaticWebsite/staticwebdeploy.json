@@ -1,111 +1,206 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "type": "string"
-        },
-        "appName": {
-            "type": "string",
-            "defaultValue": "mlhwebsite"
-        },
-        "appLocation": {
-            "type": "string",
-            "defaultValue": "eastus"
-        },
-        "indexDocument": {
-            "type": "string",
-            "defaultValue": "index.html"
-        },
-        "errorDocument404Path": {
-            "type": "string",
-            "defaultValue": "error.html"
-        }
-    },
-    "variables": {
-        "storageAccountName": "[take(toLower(replace(replace(replace(parameters('name'), ' ', ''), '-', ''), '_', '')), 24)]"
-    },
-    "resources": [
-        {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2022-09-01",
-            "name": "[variables('storageAccountName')]",
-            "location": "[resourceGroup().location]",
-            "kind": "StorageV2",
-            "sku": {
-                "name": "Standard_LRS"
-            }
-        },
-        {
-            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "apiVersion": "2023-01-31",
-            "name": "scriptRunner",
-            "location": "[resourceGroup().location]"
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
-            "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')).principalId]",
-                "principalType": "ServicePrincipal"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2020-10-01",
-            "name": "deploymentScript",
-            "location": "[resourceGroup().location]",
-            "kind": "AzurePowerShell",
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner'))]": {}
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "appLocation": {
+                    "type": "string",
+                    "defaultValue": "[resourceGroup().location]"
+                },
+                "appName": {
+                    "type": "string",
+                    "defaultValue": "mlhwebsite"
+                },
+                "environment": {
+                    "type": "string",
+                    "defaultValue": "dev",
+                    "allowedValues": [
+                        "dev",
+                        "prod"
+                    ]
+                },
+                "indexDocument": {
+                    "type": "string",
+                    "defaultValue": "index.html"
+                },
+                "errorDocument404Path": {
+                    "type": "string",
+                    "defaultValue": "error.html"
+                },
+                "subscriptionId": {
+                    "type": "string",
+                    "defaultValue": "[subscription().id]"
                 }
             },
-            "properties": {
-                "azPowerShellVersion": "10.0",
-                "scriptContent": "
-                    $ErrorActionPreference = 'Stop'\n
-                    $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
-                    $ctx = $storageAccount.Context\n
-                    Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
-                ",
-                "retentionInterval": "PT4H",
-                "environmentVariables": [
-                    {
-                        "name": "resourceGroupName",
-                        "value": "[resourceGroup().name]"
-                    },
-                    {
-                        "name": "storageAccountName",
-                        "value": "[variables('storageAccountName')]"
-                    },
-                    {
-                        "name": "indexDocument",
-                        "value": "[parameters('indexDocument')]"
-                    },
-                    {
-                        "name": "errorDocument404Path",
-                        "value": "[parameters('errorDocument404Path')]"
-                    }
-                ]
+            "variables": {
+                "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
+                "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
+                "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
+                "endPointName": "[concat(parameters('environment'), 'hodgesfamily')]",
+                "customDomainName": "dev-thehodgesfamily-net",
+                "convertedUri": "[concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/resourcegroups/', variables('resourceGroupName'), '/providers/microsoft.cdn/profiles/', variables('cdnProfileName'), '/endpoints/', variables('endPointName'), '/customdomains/', variables('customDomainName'), '/enablecustomhttps?api-version=2023-05-01')]"
             },
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ]
-        }
-    ],
-    "outputs": {
-        "staticWebsiteUrl": {
-            "type": "string",
-            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.Web]"
+            "resources": [
+                {
+                    "type": "Microsoft.Storage/storageAccounts",
+                    "apiVersion": "2022-09-01",
+                    "name": "[variables('storageAccountName')]",
+                    "location": "[parameters('appLocation')]",
+                    "kind": "StorageV2",
+                    "sku": {
+                        "name": "Standard_LRS"
+                    }
+                },
+                {
+                    "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+                    "apiVersion": "2023-01-31",
+                    "name": "ScriptRunner",
+                    "location": "[parameters('appLocation')]"
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[variables('cdnProfileName')]",
+                    "location": "[parameters('appLocation')]",
+                    "sku": {
+                        "name": "Standard_Microsoft"
+                    },
+                    "properties": {}
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles/endpoints",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'))]",
+                    "location": "[parameters('appLocation')]",
+                    "properties": {
+                        "origins": [
+                            {
+                                "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9)), '.', '-')]",
+                                "properties": {
+                                    "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))).primaryEndpoints.web), 9))]"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
+                    "apiVersion": "2022-11-01-preview",
+                    "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'), '/', variables('customDomainName'))]",
+                    "properties": {
+                        "hostName": "dev.thehodgesfamily.net"
+                    }
+                },
+                {
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "apiVersion": "2022-04-01",
+                    "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
+                    "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
+                    "properties": {
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
+                        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
+                        "principalType": "ServicePrincipal"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
+                },
+                {
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "apiVersion": "2022-04-01",
+                    "scope": "[format('Microsoft.Cdn/profiles/{0}', variables('cdnProfileName'))]",
+                    "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432'))]",
+                    "properties": {
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432')]",
+                        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
+                        "principalType": "ServicePrincipal"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
+                        "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]"
+                    ]
+                },
+                {
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "apiVersion": "2022-04-01",
+                    "scope": "[format('Microsoft.Cdn/profiles/{0}/endpoints/{1}', variables('cdnProfileName'), variables('endPointName'))]",
+                    "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','ScriptRunner'))]",
+                    "properties": {
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '426e0c7f-0c7e-4658-b36f-ff54d6c29b45')]",
+                        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
+                        "principalType": "ServicePrincipal"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]"
+                    ]
+                },
+                { 
+                    "type": "Microsoft.Resources/deploymentScripts",
+                    "apiVersion": "2020-10-01",
+                    "name": "deploymentScript",
+                    "location": "[parameters('appLocation')]",
+                    "kind": "AzurePowerShell",
+                    "identity": {
+                        "type": "UserAssigned",
+                        "userAssignedIdentities": {
+                            "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'))]": {}
+                        }
+                    },
+                    "properties": {
+                        "azPowerShellVersion": "10.0",
+                        "scriptContent": "
+                            $ErrorActionPreference = 'Stop'\n
+                            $storageAccount = Get-AzStorageAccount -ResourceGroupName $env:resourceGroupName -AccountName $env:storageAccountName\n
+                            $ctx = $storageAccount.Context\n
+                            Enable-AzStorageStaticWebsite -Context $ctx -IndexDocument $env:indexDocument -ErrorDocument404Path $env:errorDocument404Path\n
+                            $customDomainHttpsParameter = New-AzCdnManagedHttpsParametersObject -CertificateSourceParameterCertificateType Dedicated -CertificateSource Cdn -ProtocolType ServerNameIndication\n
+                            Enable-AzCdnCustomDomainCustomHttps -ResourceGroupName $env:resourceGroupName -ProfileName $env:cdnProfileName -EndpointName $env:endpointName -CustomDomainName dev-thehodgesfamily-net -CustomDomainHttpsParameter $customDomainHttpsParameter\n
+                        ",
+                        "retentionInterval": "PT4H",
+                        "environmentVariables": [
+                            {
+                                "name": "resourceGroupName",
+                                "value": "[resourceGroup().name]"
+                            },
+                            {
+                                "name": "storageAccountName",
+                                "value": "[variables('storageAccountName')]"
+                            },
+                            {
+                                "name": "indexDocument",
+                                "value": "[parameters('indexDocument')]"
+                            },
+                            {
+                                "name": "errorDocument404Path",
+                                "value": "[parameters('errorDocument404Path')]"
+                            },
+                            {
+                                "name": "cdnProfileName",
+                                "value": "[variables('cdnProfileName')]"
+                            },
+                            {
+                                "name": "endpointName",
+                                "value": "[variables('endPointName')]"
+                            },
+                            {
+                                "name": "url",
+                                "value": "[variables('convertedUri')]"
+                            }
+                        ]
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
+                        "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    ]
+                }
+            ],
+            "outputs": {
+                "staticWebsiteUrl": {
+                    "type": "string",
+                    "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web]"
+                }
+            }
         }
     }
 }
