@@ -1,6 +1,40 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
-    "resources": []
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "appName": {
+            "type": "string",
+            "defaultValue": "mlhwebsite"
+        },
+        "appLocation": {
+            "type": "string",
+            "defaultValue": "eastus"
+        },
+        "indexDocument": {
+            "type": "string",
+            "defaultValue": "index.html"
+        },
+        "errorDocument404Path": {
+            "type": "string",
+            "defaultValue": "error.html"
+        }
+    },
+    "variables": {
+        "storageAccountName": "[concat(parameters('appName'), parameters('name'), 'storage')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[variables('storageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS"
+            }
+        }
+    ]
 }
