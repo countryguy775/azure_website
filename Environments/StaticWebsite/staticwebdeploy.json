@@ -23,7 +23,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[concat(parameters('appName'), parameters('name'), 'storage')]"
+        "storageAccountName": "[concat(parameters('appName'), '$env.ENVIRONMENT_NAME', 'storage')]"
     },
     "resources": [
         {
