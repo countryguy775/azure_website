@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "name": {
+            "type": "string"
+        },
         "appLocation": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
@@ -10,14 +13,6 @@
             "type": "string",
             "defaultValue": "mlhwebsite"
         },
-        "environment": {
-            "type": "string",
-            "defaultValue": "dev",
-            "allowedValues": [
-                "dev",
-                "prod"
-            ]
-        },
         "indexDocument": {
             "type": "string",
             "defaultValue": "index.html"
@@ -25,26 +20,20 @@
         "errorDocument404Path": {
             "type": "string",
             "defaultValue": "error.html"
-        },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "[subscription().id]"
         }
     },
     "variables": {
-        "resourceGroupName": "[concat(parameters('appName'), '-', parameters('environment'), '-rg')]",
-        "storageAccountName": "[concat(parameters('appName'), parameters('environment'), 'storage')]",
-        "cdnProfileName": "[concat(parameters('appName'), '-', parameters('environment'), '-cdnp')]",
-        "endPointName": "[concat(parameters('environment'), 'hodgesfamily')]",
-        "customDomainName": "dev-thehodgesfamily-net",
-        "convertedUri": "[concat('https://management.azure.com/subscriptions/', parameters('subscriptionId'), '/resourcegroups/', variables('resourceGroupName'), '/providers/microsoft.cdn/profiles/', variables('cdnProfileName'), '/endpoints/', variables('endPointName'), '/customdomains/', variables('customDomainName'), '/enablecustomhttps?api-version=2023-05-01')]"
+        "storageAccountName": "[take(toLower(replace(replace(replace(parameters('name'), ' ', ''), '-', ''), '_', '')), 24)]",
+        "cdnProfileName": "[concat(parameters('appName'), '-cdnp')]",
+        "endPointName": "devhodgesfamily",
+        "customDomainName": "dev-thehodgesfamily-net"
     },
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2022-09-01",
             "name": "[variables('storageAccountName')]",
-            "location": "[parameters('appLocation')]",
+            "location": "[resourceGroup().location]",
             "kind": "StorageV2",
             "sku": {
                 "name": "Standard_LRS"
@@ -60,7 +49,7 @@
             "type": "Microsoft.Cdn/profiles",
             "apiVersion": "2022-11-01-preview",
             "name": "[variables('cdnProfileName')]",
-            "location": "[parameters('appLocation')]",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard_Microsoft"
             },
@@ -70,7 +59,7 @@
             "type": "Microsoft.Cdn/profiles/endpoints",
             "apiVersion": "2022-11-01-preview",
             "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'))]",
-            "location": "[parameters('appLocation')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "origins": [
                     {
@@ -181,10 +170,6 @@
                     {
                         "name": "endpointName",
                         "value": "[variables('endPointName')]"
-                    },
-                    {
-                        "name": "url",
-                        "value": "[variables('convertedUri')]"
                     }
                 ]
             },
