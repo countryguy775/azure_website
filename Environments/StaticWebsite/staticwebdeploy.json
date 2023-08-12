@@ -64,6 +64,12 @@
                     }
                 ]
             }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "name": "scriptRunner",
+            "location": "[resourceGroup().location]"
         }
     ]
 }
