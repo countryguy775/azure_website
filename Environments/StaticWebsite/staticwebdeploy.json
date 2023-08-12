@@ -82,5 +82,11 @@
                         "principalType": "ServicePrincipal"
                     } 
         }
-    ]
+    ],
+    "outputs": {
+        "storageAcctName": {
+            "type": "string",
+            "value": "[variables('storageAccountName')]"
+        }
+    }
 }
