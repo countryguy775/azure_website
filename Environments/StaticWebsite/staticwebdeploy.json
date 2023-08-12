@@ -24,7 +24,7 @@
     },
     "variables": {
         "storageAccountName": "[take(toLower(replace(replace(replace(parameters('name'), ' ', ''), '-', ''), '_', '')), 24)]",
-        "cdnProfileName": "[concat(parameters('appName'), '-cdnp')]",
+        "cdnProfileName": "[concat(parameters('appName'), variables('storageAccountName'), '-cdnp')]",
         "endPointName": "devhodgesfamily",
         "customDomainName": "dev-thehodgesfamily-net"
     },
@@ -38,12 +38,6 @@
             "sku": {
                 "name": "Standard_LRS"
             }
-        },
-        {
-            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "apiVersion": "2023-01-31",
-            "name": "ScriptRunner",
-            "location": "[parameters('appLocation')]"
         },
         {
             "type": "Microsoft.Cdn/profiles",
@@ -78,50 +72,6 @@
             "properties": {
                 "hostName": "dev.thehodgesfamily.net"
             }
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
-            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
-            "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
-                "principalType": "ServicePrincipal"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "scope": "[format('Microsoft.Cdn/profiles/{0}', variables('cdnProfileName'))]",
-            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','ScriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432'))]",
-            "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ec156ff8-a8d1-4d15-830c-5b80698ca432')]",
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
-                "principalType": "ServicePrincipal"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]",
-                "[resourceId('Microsoft.Cdn/profiles', variables('cdnProfileName'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2022-04-01",
-            "scope": "[format('Microsoft.Cdn/profiles/{0}/endpoints/{1}', variables('cdnProfileName'), variables('endPointName'))]",
-            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities','ScriptRunner'))]",
-            "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '426e0c7f-0c7e-4658-b36f-ff54d6c29b45')]",
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
-                "principalType": "ServicePrincipal"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')]"
-            ]
         }
     ]
 }
