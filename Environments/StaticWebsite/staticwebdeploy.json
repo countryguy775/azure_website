@@ -96,9 +96,28 @@
             },
             "properties": {
                 "azPowerShellVersion": "3.0",
-                "scriptContent": "",
+                "scriptContent": "
+                    $ErrorActionPreference = 'Stop'\n
+                ",
                 "retentionInterval": "PT4H",
-                "environmentVariables": []
+                "environmentVariables": [
+                    {
+                        "name": "resourceGroupName",
+                        "value": "[resourceGroup().name]"
+                    },
+                    {
+                        "name": "storageAccountName",
+                        "value": "[variables('storageAccountName')]"
+                    },
+                    {
+                        "name": "indexDocument",
+                        "value": "[parameters('indexDocument')]"
+                    },
+                    {
+                        "name": "errorDocument404Path",
+                        "value": "[parameters('errorDocument404Path')]"
+                    }
+                ]
             }
         }
     ],
