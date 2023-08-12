@@ -81,6 +81,31 @@
                         "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'ScriptRunner')).principalId]",
                         "principalType": "ServicePrincipal"
                     } 
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "enableStaticWeb",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner'))]": {}
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "3.0",
+                "scriptContent": "",
+                "retentionInterval": "PT4H",
+                "environmentVariables": []
+            }
         }
-    ]
+    ],
+    "outputs": {
+        "staticWebsiteUrl": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.Web]"
+        }
+    }
 }
