@@ -18,6 +18,9 @@ jobs:
     uses: ./.github/workflows/environment_config.yml
 
   create_env:
+    outputs: 
+      storageAcctName: ${{ steps.envcreate.outputs.storageAcctName }}
+
     if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
     name: Create ${{ needs.config.outputs.type }} Environment
     runs-on: ubuntu-latest
@@ -50,14 +53,6 @@ jobs:
               --dev-center ${{ vars.AZURE_DEVCENTER }} --project ${{ vars.AZURE_PROJECT }} \
               --catalog-name ${{ vars.AZURE_CATALOG }} --environment-definition-name ${{ vars.AZURE_CATALOG_ITEM }} \
               --parameters '{ "name": "${{ env.ENVIRONMENT_NAME }}" }' --only-show-errors
-
-      - name: Enable Static Website
-        run: |
-          az storage blob service-properties update \
-            --account-name ${{ steps.envcreate.outputs.storageAcctName }} \
-            --static-website  true \
-            --404-document error.html \
-            --index-document index.html
       
       - name: Get Resource Group
         shell: bash {0}
@@ -78,3 +73,15 @@ jobs:
           echo "ENVIRONMENT_SUB=$environment_sub" >> $GITHUB_ENV
 
           echo "- [View environment resources in the Azure portal](https://portal.azure.com/#@${{ vars.AZURE_TENANT_ID }}/resource$environment_rg)" >> $GITHUB_STEP_SUMMARY
+  
+  static_website:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable Static Website
+        run: |
+          az storage blob service-properties update \
+            --account-name ${{ steps.envcreate.outputs.storageAcctName }} \
+            --static-website  true \
+            --404-document error.html \
+            --index-document index.html
+    
