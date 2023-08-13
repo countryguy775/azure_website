@@ -11,9 +11,9 @@ on:
       name:
         description: 'The name of the environment'
         value: ${{ jobs.env_config.outputs.name }}
-      envtype:
+      type:
         description: 'The type of the environment'
-        value: ${{ jobs.env_config.outputs.envtype }}
+        value: ${{ jobs.env_config.outputs.type }}
 
 env:
   # format: ci-[branch|pr]-[branch name|pr number]-suffix
@@ -34,7 +34,7 @@ jobs:
     # Map the job outputs to step outputs
     outputs:
       name: ${{ steps.get_config.outputs.name }}
-      envtype: ${{ steps.get_config.outputs.envtype }}
+      type: ${{ steps.get_config.outputs.type }}
 
     steps:
       - name: Validate
@@ -72,4 +72,4 @@ jobs:
         name: Set Outputs
         run: |
           echo "name=$ENVIRONMENT_NAME" >> $GITHUB_OUTPUT
-          echo "envtype=$ENVIRONMENT_TYPE" >> $GITHUB_OUTPUT
+          echo "type=$ENVIRONMENT_TYPE" >> $GITHUB_OUTPUT
