@@ -20,6 +20,7 @@ jobs:
   create_env:
     outputs: 
       storageAcctName: ${{ steps.envcreate.outputs.storageAcctName }}
+      storageAcctKey: ${{ steps.envcreate.outputs.storageAcctKey }}
 
     if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
     name: Create ${{ needs.config.outputs.type }} Environment
@@ -79,11 +80,13 @@ jobs:
     needs: create_env
     env:
       storageAcctName: ${{ needs.create_env.outputs.storageAcctName }}
+      storageAcctKey: ${{ needs.create_env.outputs.storageAcctKey }}
     steps:
       - name: Enable Static Website
         run: |
           az storage blob service-properties update \
             --account-name ${{ env.storageAcctName }} \
+            --account-key ${{ env.storageAcctKey }}
             --static-website  true \
             --404-document error.html \
             --index-document index.html
