@@ -87,6 +87,10 @@
         "storageAcctName": {
             "type": "string",
             "value": "[variables('storageAccountName')]"
+        },
+        "storageAcctKey": {
+            "type": "string",
+            "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
         }
     }
 }
