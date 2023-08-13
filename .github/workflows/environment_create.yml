@@ -19,8 +19,8 @@ jobs:
 
   create_env:
     outputs: 
-      storageAcctName: ${{ steps.envcreate.outputs.storageAcctName }}
-      storageAcctKey: ${{ steps.envcreate.outputs.storageAcctKey }}
+      storageAcctName: ${{ needs.envcreate.outputs.storageAcctName }}
+      storageAcctKey: ${{ needs.envcreate.outputs.storageAcctKey }}
 
     if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
     name: Create ${{ needs.config.outputs.type }} Environment
@@ -80,6 +80,7 @@ jobs:
     needs: create_env
     steps:
       - name: Enable Static Website
+        shell: bash {0}
         run: |
           echo ${{ needs.create_env.outputs.storageAcctName }}
 
