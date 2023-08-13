@@ -19,8 +19,8 @@ jobs:
 
   create_env:
     outputs: 
-      storageAcctName: ${{ needs.envcreate.outputs.storageAcctName }}
-      storageAcctKey: ${{ needs.envcreate.outputs.storageAcctKey }}
+      storageAcctName: ${{ steps.envcreate.outputs.storageAcctName }}
+      storageAcctKey: ${{ steps.envcreate.outputs.storageAcctKey }}
 
     if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
     name: Create ${{ needs.config.outputs.type }} Environment
