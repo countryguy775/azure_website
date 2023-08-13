@@ -72,4 +72,4 @@ jobs:
         name: Set Outputs
         run: |
           echo "name=$ENVIRONMENT_NAME" >> $GITHUB_OUTPUT
-          echo "type=$ENVIRONMENT_TYPE" >> $GITHUB_OUTPUT
+          echo "envtype=$ENVIRONMENT_TYPE" >> $GITHUB_OUTPUT
