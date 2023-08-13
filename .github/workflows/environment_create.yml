@@ -73,21 +73,8 @@ jobs:
           echo "ENVIRONMENT_GROUP=$environment_group" >> $GITHUB_ENV
           echo "ENVIRONMENT_SUB=$environment_sub" >> $GITHUB_ENV
 
+          echo "$storageAcctName"
+
           echo "- [View environment resources in the Azure portal](https://portal.azure.com/#@${{ vars.AZURE_TENANT_ID }}/resource$environment_rg)" >> $GITHUB_STEP_SUMMARY
   
-  static_website:
-    runs-on: ubuntu-latest
-    needs: create_env
-    env:
-      storageAcctName: ${{ needs.create_env.outputs.storageAcctName }}
-      storageAcctKey: ${{ needs.create_env.outputs.storageAcctKey }}
-    steps:
-      - name: Enable Static Website
-        run: |
-          az storage blob service-properties update \
-            --account-name ${{ env.storageAcctName }} \
-            --account-key ${{ env.storageAcctKey }}
-            --static-website  true \
-            --404-document error.html \
-            --index-document index.html
-    
+  
