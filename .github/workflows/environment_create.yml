@@ -78,6 +78,4 @@ jobs:
           echo "$storageAcctName"
 
           echo "- [View environment resources in the Azure portal](https://portal.azure.com/#@${{ vars.AZURE_TENANT_ID }}/resource$environment_rg)" >> $GITHUB_STEP_SUMMARY
-  
- 
-    
+
