@@ -82,5 +82,5 @@ jobs:
       - name: Enable Static Website
         shell: bash {0}
         run: |
-          echo ${{ needs.create_env.outputs.storageAcctName }}
+          echo ${{ needs.create_env.outputs.storageAcctName }} >> $GITHUB_STEP_SUMMARY
 
