@@ -19,15 +19,15 @@ jobs:
 
   create_env:
     if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
-    name: Create ${{ needs.config.outputs.type }} Environment
+    name: Create ${{ needs.config.outputs.envtype }} Environment
     runs-on: ubuntu-latest
 
     needs: config
-    environment: ${{ needs.config.outputs.type }}
+    environment: ${{ needs.config.outputs.envtype }}
 
     env:
       ENVIRONMENT_NAME: ${{ needs.config.outputs.name }}
-      ENVIRONMENT_TYPE: ${{ needs.config.outputs.type }}
+      ENVIRONMENT_TYPE: ${{ needs.config.outputs.envtype }}
 
     steps:
       - uses: actions/checkout@v3
