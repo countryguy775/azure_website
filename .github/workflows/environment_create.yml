@@ -55,7 +55,7 @@ jobs:
         run: |
           az storage blob service-properties update \
             --account-name ${{ steps.envcreate.outputs.storageAcctName }} \
-            --static-website \
+            --static-website  true \
             --404-document error.html \
             --index-document index.html
       
