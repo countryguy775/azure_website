@@ -5,6 +5,9 @@
         "name": {
             "type": "string"
         },
+        "type": {
+            "type": "string"
+        },
         "appLocation": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
@@ -23,7 +26,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[take(toLower(replace(replace(replace(parameters('name'), ' ', ''), '-', ''), '_', '')), 24)]",
+        "storageAccountName": "[concat(parameters('appName'), parameters('type'), 'storage')]",
         "cdnProfileName": "[concat(parameters('appName'), variables('storageAccountName'), '-cdnp')]",
         "endPointName": "[concat(variables('storageAccountName'), 'hodgesfamily')]",
         "customDomainName": "dev-thehodgesfamily-net"

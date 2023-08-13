@@ -18,10 +18,6 @@ jobs:
     uses: ./.github/workflows/environment_config.yml
 
   create_env:
-    outputs: 
-      storageAcctName: ${{ steps.envcreate.outputs.storageAcctName }}
-      storageAcctKey: ${{ steps.envcreate.outputs.storageAcctKey }}
-
     if: github.event_name == 'pull_request' || github.event.ref_type == 'branch'
     name: Create ${{ needs.config.outputs.type }} Environment
     runs-on: ubuntu-latest
@@ -73,7 +69,4 @@ jobs:
           echo "ENVIRONMENT_GROUP=$environment_group" >> $GITHUB_ENV
           echo "ENVIRONMENT_SUB=$environment_sub" >> $GITHUB_ENV
 
-          echo "$storageAcctName"
-
           echo "- [View environment resources in the Azure portal](https://portal.azure.com/#@${{ vars.AZURE_TENANT_ID }}/resource$environment_rg)" >> $GITHUB_STEP_SUMMARY
-
