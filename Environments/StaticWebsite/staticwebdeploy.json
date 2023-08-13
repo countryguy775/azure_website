@@ -86,7 +86,7 @@
     "outputs": {
         "storageAcctName": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).name]"
+            "value": "[variables('storageAccountName')]"
         }
     }
 }
