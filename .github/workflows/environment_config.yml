@@ -13,7 +13,7 @@ on:
         value: ${{ jobs.env_config.outputs.name }}
       envtype:
         description: 'The type of the environment'
-        value: ${{ jobs.env_config.outputs.type }}
+        value: ${{ jobs.env_config.outputs.envtype }}
 
 env:
   # format: ci-[branch|pr]-[branch name|pr number]-suffix
@@ -34,7 +34,7 @@ jobs:
     # Map the job outputs to step outputs
     outputs:
       name: ${{ steps.get_config.outputs.name }}
-      type: ${{ steps.get_config.outputs.type }}
+      envtype: ${{ steps.get_config.outputs.envtype }}
 
     steps:
       - name: Validate
