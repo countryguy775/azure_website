@@ -75,7 +75,7 @@ jobs:
         run: |
           az storage blob upload-batch \
           --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
-          --source ".\mlh.website\html" \
+          --source "..\..\MLH.Website\HTML" \
           --destination '$web'
 
 
