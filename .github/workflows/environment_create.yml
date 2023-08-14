@@ -54,7 +54,7 @@ jobs:
       - name: Enable Static Website
         run: |
           az storage blob service-properties update \
-          --account-name [tolower(concat('mlhwebsite', ${{ env.ENVIRONMENT_TYPE }}, 'storage'))] \
+          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', env.ENVIRONMENT_TYPE, 'storage') }} \
           --static-website true \
           --404-document error.html \
           --index-document index.html
