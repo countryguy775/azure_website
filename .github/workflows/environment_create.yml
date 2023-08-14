@@ -61,7 +61,7 @@ jobs:
       - name: lowercase output
         id: conv2lower
         run: |
-          LCENV = echo ${{ steps.inputstring.outputs.lowercase }}
+          $LCENV = echo ${{ steps.inputstring.outputs.lowercase }}
 
       - name: Enable Static Website
         run: |
