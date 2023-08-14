@@ -26,7 +26,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[concat(parameters('appName'), parameters('envName'), 'storage')]",
+        "storageAccountName": "[tolower(concat(parameters('appName'), parameters('envName'), 'storage'))]",
         "cdnProfileName": "[concat(parameters('appName'), variables('storageAccountName'), '-cdnp')]",
         "endPointName": "[concat(variables('storageAccountName'), 'hodgesfamily')]",
         "customDomainName": "dev-thehodgesfamily-net"
