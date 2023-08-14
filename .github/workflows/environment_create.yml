@@ -61,12 +61,12 @@ jobs:
       - name: lowercase output
         id: conv2lower
         run: |
-          LCENV = '${{ steps.inputstring.outputs.lowercase }}'
+          echo "LCENV=${{ steps.inputstring.outputs.lowercase }}" >> $GITHUB_OUTPUT
 
       - name: Enable Static Website
         run: |
           az storage blob service-properties update \
-          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', env.LCENV, 'storage') }} \
+          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
           --static-website true \
           --404-document error.html \
           --index-document index.html
