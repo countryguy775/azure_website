@@ -74,7 +74,7 @@ jobs:
       - name: Upload Files
         run: |
           az storage blob upload-batch \
-          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV) }} \
+          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
           --source ".\mlh.website\html" \
           --destination '$web'
 
