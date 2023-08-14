@@ -71,6 +71,14 @@ jobs:
           --404-document error.html \
           --index-document index.html
 
+      - name: Upload Files
+        run: |
+          az storage blob upload-batch \
+          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV) }} \
+          --source ".\mlh.website\html" \
+          --destination '$web'
+
+
       - name: Get Resource Group
         shell: bash {0}
         run: |
