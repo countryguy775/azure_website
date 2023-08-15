@@ -28,6 +28,7 @@ jobs:
     env:
       ENVIRONMENT_NAME: ${{ needs.config.outputs.name }}
       ENVIRONMENT_TYPE: ${{ needs.config.outputs.type }}
+      LCENV: ${{ needs.config.outputs.type }}
 
     steps:
       - uses: actions/checkout@v3
@@ -51,6 +52,33 @@ jobs:
               --catalog-name ${{ vars.AZURE_CATALOG }} --environment-definition-name ${{ vars.AZURE_CATALOG_ITEM }} \
               --parameters '{ "name": "${{ env.ENVIRONMENT_NAME }}", "envName": "${{ env.ENVIRONMENT_TYPE }}" }' --only-show-errors
       
+      - name: downcase envtype
+        id: inputstring
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ env.LCENV }}
+
+      - name: lowercase output
+        id: conv2lower
+        run: |
+          echo "LCENV=${{ steps.inputstring.outputs.lowercase }}" >> $GITHUB_OUTPUT
+
+      - name: Enable Static Website
+        run: |
+          az storage blob service-properties update \
+          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
+          --static-website true \
+          --404-document error.html \
+          --index-document index.html
+
+      - name: Upload Files
+        run: |
+          az storage blob upload-batch \
+          --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
+          --source 'MLH.Website/HTML' \
+          --destination '$web'
+
+
       - name: Get Resource Group
         shell: bash {0}
         run: |

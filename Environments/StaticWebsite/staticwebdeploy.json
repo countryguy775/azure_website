@@ -15,21 +15,13 @@
         "appName": {
             "type": "string",
             "defaultValue": "mlhwebsite"
-        },
-        "indexDocument": {
-            "type": "string",
-            "defaultValue": "index.html"
-        },
-        "errorDocument404Path": {
-            "type": "string",
-            "defaultValue": "error.html"
         }
     },
     "variables": {
         "storageAccountName": "[tolower(concat(parameters('appName'), parameters('envName'), 'storage'))]",
-        "cdnProfileName": "[concat(parameters('appName'), variables('storageAccountName'), '-cdnp')]",
+        "cdnProfileName": "[concat(variables('storageAccountName'), '-cdnp')]",
         "endPointName": "[concat(variables('storageAccountName'), 'hodgesfamily')]",
-        "customDomainName": "dev-thehodgesfamily-net"
+        "customDomainName": "[toLower(concat(parameters('envName'), '-thehodgesfamily-net'))]"
     },
     "resources": [
         {
@@ -85,15 +77,5 @@
                         "principalType": "ServicePrincipal"
                     } 
         }
-    ],
-    "outputs": {
-        "storageAcctName": {
-            "type": "string",
-            "value": "[variables('storageAccountName')]"
-        },
-        "storageAcctKey": {
-            "type": "string",
-            "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
-        }
-    }
+    ]
 }
