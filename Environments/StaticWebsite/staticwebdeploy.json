@@ -19,7 +19,7 @@
     },
     "variables": {
         "storageAccountName": "[tolower(concat(parameters('appName'), parameters('envName'), 'storage'))]",
-        "cdnProfileName": "[concat(parameters('appName'), variables('storageAccountName'), '-cdnp')]",
+        "cdnProfileName": "[concat(variables('storageAccountName'), '-cdnp')]",
         "endPointName": "[concat(variables('storageAccountName'), 'hodgesfamily')]",
         "customDomainName": "[toLower(concat(parameters('envName'), '-thehodgesfamily-net'))]"
     },
@@ -77,15 +77,5 @@
                         "principalType": "ServicePrincipal"
                     } 
         }
-    ],
-    "outputs": {
-        "storageAcctName": {
-            "type": "string",
-            "value": "[variables('storageAccountName')]"
-        },
-        "storageAcctKey": {
-            "type": "string",
-            "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value]"
-        }
-    }
+    ]
 }
