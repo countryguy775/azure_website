@@ -63,9 +63,9 @@
         {
             "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
             "apiVersion": "2022-11-01-preview",
-            "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'), '/', variables('customDomainName'))]",
+            "name": "mlhwebsitedevcdnp/devhodgesfamily/dev-thehodgesfamily-net",
             "properties": {
-                "hostName": "[replace(variables('customDomainName'), '-', '.')]"
+                "hostName": "dev.thehodgesfamily.net"
             }
         }
     ]
