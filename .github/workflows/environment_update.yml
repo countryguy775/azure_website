@@ -32,7 +32,7 @@ jobs:
     env:
       ENVIRONMENT_NAME: ${{ needs.config.outputs.name }}
       ENVIRONMENT_TYPE: ${{ needs.config.outputs.type }}
-      LCENV: $${{ needs.config.outputs.type }}
+      LCENV: ${{ needs.config.outputs.type }}
 
     steps:
       - uses: actions/checkout@v3
