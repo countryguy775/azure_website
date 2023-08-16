@@ -116,6 +116,6 @@ jobs:
         run: |
           az cdn custom-domain enable-https \
           -g ${{ env.ENVIRONMENT_NAME }} \
-          --profile-name ${{ format('{0}{1}{2}', 'mlhwebsite', env.LCENV, 'cdnp') }} \
-          --endpoint-name ${{ format('{0}{1}', 'hodgesfamily', env.LCENV) }} \
-          -n ${{ format('{0}.{1}', env.LCENV, 'thehodgesfamily.net') }}
+          --profile-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'cdnp') }} \
+          --endpoint-name ${{ format('{0}{1}', 'hodgesfamily', steps.conv2lower.outputs.LCENV) }} \
+          -n ${{ format('{0}.{1}', steps.conv2lower.outputs.LCENV, 'thehodgesfamily.net') }}
