@@ -110,7 +110,8 @@ jobs:
           az storage blob upload-batch \
           --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
           --source 'MLH.Website/HTML' \
-          --destination '$web'
+          --destination '$web' \
+          --overwrite
 
       - name: Enable Custom HTTPS
         run: |
