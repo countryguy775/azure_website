@@ -20,7 +20,7 @@
     "variables": {
         "storageAccountName": "[tolower(concat(parameters('appName'), parameters('envName'), 'storage'))]",
         "cdnProfileName": "[tolower(concat(parameters('appName'), parameters('envName'), 'cdnp'))]",
-        "endPointName": "[tolower(concat(parameters('envName'), 'hodgesfamily'))]",
+        "endPointName": "[tolower(concat('hodgesfamily', parameters('envName')))]",
         "customDomainName": "[if(equals(parameters('envName'), 'Prod'), 'www-thehodgesfamily-net', toLower(concat(parameters('envName'), '-thehodgesfamily-net')))]"
     },
     "resources": [
@@ -63,7 +63,7 @@
         {
             "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
             "apiVersion": "2022-11-01-preview",
-            "name": "[concat(variables('cdnProfileName'), '/', variables('cdnProfileName'), '/', variables('endPointName'), '/', variables('customDomainName'))]",
+            "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'), '/', variables('customDomainName'))]",
             "properties": {
                 "hostName": "[replace(variables('customDomainName'), '-', '.')]"
             }
