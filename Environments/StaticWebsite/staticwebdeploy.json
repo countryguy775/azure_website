@@ -19,8 +19,8 @@
     },
     "variables": {
         "storageAccountName": "[tolower(concat(parameters('appName'), parameters('envName'), 'storage'))]",
-        "cdnProfileName": "[concat(variables('storageAccountName'), '-cdnp')]",
-        "endPointName": "[concat(variables('storageAccountName'), 'hodgesfamily')]",
+        "cdnProfileName": "[tolower(concat(parameters('appName', parameters('envName'), '-cdnp'))]",
+        "endPointName": "hodgesfamily",
         "customDomainName": "[if(equals(parameters('envName'), 'Prod'), 'www-thehodgesfamily-net', toLower(concat(parameters('envName'), '-thehodgesfamily-net')))]"
     },
     "resources": [
