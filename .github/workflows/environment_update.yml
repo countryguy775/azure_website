@@ -99,7 +99,9 @@ jobs:
 
       - name: Enable Static Website
         run: |
-          if [${{ env.ENVIRONMENT_TYPE }} -eq 'Prod']; then
+          envType = '${{ env.ENVIRONMENT_TYPE }}'
+
+          if envType not in ['Dev', 'Test']:
           az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -113,7 +115,9 @@ jobs:
   
       - name: Upload Files
         run: |
-          if [${{ env.ENVIRONMENT_TYPE }} -eq 'Prod']; then
+          envType = '${{ env.ENVIRONMENT_TYPE }}'
+
+          if envType not in ['Dev', 'Test']:
           az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -131,7 +135,9 @@ jobs:
           endpoint_name: ${{ format('{0}{1}', 'hodgesfamily', steps.conv2lower.outputs.LCENV) }}
           
         run: |
-          if [${{ env.ENVIRONMENT_TYPE }} -eq 'Prod']; then
+          envType = '${{ env.ENVIRONMENT_TYPE }}'
+
+          if envType not in ['Dev', 'Test']:
           az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
