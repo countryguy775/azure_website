@@ -78,6 +78,13 @@ jobs:
           --source 'MLH.Website/HTML' \
           --destination '$web'
 
+      - name: Enable Custom HTTPS
+        run: |
+          az cdn custom-domain enable-https \
+          -g ${{ format('{0}-{1}', vars.AZURE_PROJECT , env.ENVIRONMENT_NAME) }} \
+          --profile-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'cdnp') }} \
+          --endpoint-name ${{ format('{0}{1}', 'hodgesfamily', steps.conv2lower.outputs.LCENV) }} \
+          -n ${{ format('{0}-{1}', steps.conv2lower.outputs.LCENV, 'thehodgesfamily-net') }}
 
       - name: Get Resource Group
         shell: bash {0}
@@ -98,3 +105,4 @@ jobs:
           echo "ENVIRONMENT_SUB=$environment_sub" >> $GITHUB_ENV
 
           echo "- [View environment resources in the Azure portal](https://portal.azure.com/#@${{ vars.AZURE_TENANT_ID }}/resource$environment_rg)" >> $GITHUB_STEP_SUMMARY
+
