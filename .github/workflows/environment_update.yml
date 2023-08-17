@@ -114,9 +114,13 @@ jobs:
           --overwrite
 
       - name: Enable Custom HTTPS
+        env:
+          profile_name: ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'cdnp') }}
+          endpoint_name: ${{ format('{0}{1}', 'hodgesfamily', steps.conv2lower.outputs.LCENV) }}
+          
         run: |
           az cdn custom-domain enable-https \
           -g ${{ format('{0}-{1}', vars.AZURE_PROJECT, env.ENVIRONMENT_NAME) }} \
           --profile-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'cdnp') }} \
           --endpoint-name ${{ format('{0}{1}', 'hodgesfamily', steps.conv2lower.outputs.LCENV) }} \
-          -n ${{ format('{0}{1}', steps.conv2lower.outputs.LCENV, 'customdomain') }}
+          -n ${{ format('{0}-{1}', steps.conv2lower.outputs.LCENV, 'thehodgesfamily-net') }}
