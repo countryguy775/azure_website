@@ -65,6 +65,12 @@ jobs:
 
       - name: Enable Static Website
         run: |
+          if [env.ENVIRONMENT_TYPE -eq 'Prod']; then
+            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+          else
+            az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          fi
+
           az storage blob service-properties update \
           --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
           --static-website true \
@@ -73,6 +79,12 @@ jobs:
 
       - name: Upload Files
         run: |
+          if [env.ENVIRONMENT_TYPE -eq 'Prod']; then
+            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+          else
+            az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          fi
+
           az storage blob upload-batch \
           --account-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'storage') }} \
           --source 'MLH.Website/HTML' \
@@ -80,6 +92,12 @@ jobs:
 
       - name: Enable Custom HTTPS
         run: |
+          if [env.ENVIRONMENT_TYPE -eq 'Prod']; then
+          az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+          else
+            az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          fi
+          
           az cdn custom-domain enable-https \
           -g ${{ format('{0}-{1}', vars.AZURE_PROJECT , env.ENVIRONMENT_NAME) }} \
           --profile-name ${{ format('{0}{1}{2}', 'mlhwebsite', steps.conv2lower.outputs.LCENV, 'cdnp') }} \
