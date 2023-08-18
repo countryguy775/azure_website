@@ -65,7 +65,7 @@ jobs:
 
       - name: Enable Static Website
         run: |
-          if [env.ENVIRONMENT_TYPE -eq 'Prod']; then
+          if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
             az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload Files
         run: |
-          if [env.ENVIRONMENT_TYPE -eq 'Prod']; then
+          if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
             az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -92,8 +92,8 @@ jobs:
 
       - name: Enable Custom HTTPS
         run: |
-          if [env.ENVIRONMENT_TYPE -eq 'Prod']; then
-          az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+          if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
+            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
           fi
