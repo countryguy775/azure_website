@@ -103,7 +103,6 @@ jobs:
 
           if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
             az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
-          else
             az account list
           fi
 
