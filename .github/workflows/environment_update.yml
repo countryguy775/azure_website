@@ -102,8 +102,9 @@ jobs:
           
 
           if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
-            
-            az account list
+            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+          else
+            az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
           fi
 
           az storage blob service-properties update \
@@ -115,7 +116,7 @@ jobs:
       - name: Upload Files
         run: |
           if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
-          az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
           fi
@@ -133,7 +134,7 @@ jobs:
           
         run: |
           if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
-          az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
           else
             az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
           fi
