@@ -49,7 +49,10 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      ]
     }
   ]
 }
