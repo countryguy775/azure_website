@@ -102,9 +102,9 @@ jobs:
           
 
           if ["${{ env.ENVIRONMENT_TYPE }}" == "Prod"]; then
-            az account set --subscription ${{ vars.AZURE_PROD_SUBSCRIPTION_ID }}
+            az account list
           else
-            az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            az account list
           fi
 
           az storage blob service-properties update \
