@@ -30,6 +30,17 @@
     "webAppName": "[format('{0}-web', variables('resourceName'))]"
   },
   "resources": [
-    
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
+      "name": "[variables('hostingPlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "tier": "Standard",
+        "name": "S1"
+      },
+      "properties": {},
+      "tags": "[parameters('tags')]"
+    }
   ]
 }
