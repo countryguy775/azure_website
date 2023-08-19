@@ -41,6 +41,15 @@
       },
       "properties": {},
       "tags": "[parameters('tags')]"
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('webAppName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      }
     }
   ]
 }
