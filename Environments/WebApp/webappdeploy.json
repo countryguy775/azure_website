@@ -30,29 +30,6 @@
     "webAppName": "[format('{0}-web', variables('resourceName'))]"
   },
   "resources": [
-    {
-      "type": "Microsoft.Web/serverfarms",
-      "apiVersion": "2022-03-01",
-      "name": "[variables('hostingPlanName')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "tier": "Standard",
-        "name": "S1"
-      },
-      "tags": "[parameters('tags')]"
-    },
-    {
-      "type": "Microsoft.Web/sites",
-      "apiVersion": "2022-03-01",
-      "name": "[variables('webAppName')]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
-      },
-      "tags": "[parameters('tags')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
-      ]
-    }
+    
   ]
 }
