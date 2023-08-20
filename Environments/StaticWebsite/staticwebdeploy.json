@@ -74,6 +74,51 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Cdn/profiles/endpoints', variables('cdnProfileName'), variables('endPointName'))]"
             ]
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "name": "scriptRunner",
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('storageAccountName'))]",
+            "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')).principalId]",
+                "principalType": "ServicePrincipal"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "Enable Static Website",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]": {}
+                }
+            },
+            "kind": "AzureCLI",
+            "properties": {
+                "retentionInterval": "P1D",
+                "azCliVersion": "2.5",
+                "scriptContent": "
+                    az storage blob service-properties update 
+                       --account-name 'variables('storageAccountName')'
+                       --static-website true 
+                       --index-document index.html 
+                       --404-document error.html
+                "
+            }
         }
     ]
 }
