@@ -99,7 +99,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
-            "name": "Enable Static Website",
+            "name": "enableStaticWebsite",
             "location": "[resourceGroup().location]",
             "identity": {
                 "type": "UserAssigned",
