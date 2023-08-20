@@ -92,8 +92,7 @@
                 "principalType": "ServicePrincipal"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]"
             ]
         },
         {
