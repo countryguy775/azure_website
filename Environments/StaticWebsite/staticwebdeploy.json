@@ -110,7 +110,7 @@
             "kind": "AzureCLI",
             "properties": {
                 "retentionInterval": "P1D",
-                "azCliVersion": "2.5",
+                "azCliVersion": "2.50.0",
                 "scriptContent": "
                     az storage blob service-properties update 
                        --account-name 'variables('storageAccountName')'
