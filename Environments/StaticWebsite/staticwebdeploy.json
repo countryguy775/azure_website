@@ -90,6 +90,26 @@
                 "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')).principalId]",
                 "principalType": "ServicePrincipal"
             }
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "enableStaticWebsite",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]": {}
+                }
+            },
+            "kind": "AzureCLI",
+            "properties": {
+                "azCliVersion": "2.50.0",
+                "scriptContent": "
+                    echo 'Script is working!'
+                ",
+                "retentionInterval": "P1D"
+            }
         }
     ]
 }
