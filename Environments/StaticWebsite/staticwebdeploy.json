@@ -99,11 +99,7 @@
                     echo 'Script is working!'
                 ",
                 "retentionInterval": "P1D"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ]
+            }
         }
     ]
 }
