@@ -64,17 +64,7 @@
                 ]
             }
         },
-        {
-            "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
-            "apiVersion": "2022-11-01-preview",
-            "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'), '/', variables('customDomainName'))]",
-            "properties": {
-                "hostName": "[replace(variables('customDomainName'), '-', '.')]"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Cdn/profiles/endpoints', variables('cdnProfileName'), variables('endPointName'))]"
-            ]
-        },
+        
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2023-01-31",
