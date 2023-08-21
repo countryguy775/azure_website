@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "envName": {
+            "type": "string"
+        },
+        "appLocation": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "appName": {
+            "type": "string",
+            "defaultValue": "mlhwebsite"
+        }
+    },
+    "variables": {
+        "storageAccountName": "[tolower(concat(parameters('appName'), parameters('envName'), 'storage'))]",
+        "cdnProfileName": "[tolower(concat(parameters('appName'), parameters('envName'), 'cdnp'))]",
+        "endPointName": "[tolower(concat('hodgesfamily', parameters('envName')))]",
+        "customDomainName": "[if(equals(parameters('envName'), 'Prod'), 'www-thehodgesfamily-net', toLower(concat(parameters('envName'), '-thehodgesfamily-net')))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[variables('storageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_LRS"
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles",
+            "apiVersion": "2022-11-01-preview",
+            "name": "[variables('cdnProfileName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_Microsoft"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Cdn/profiles/endpoints",
+            "apiVersion": "2022-11-01-preview",
+            "name": "[concat(variables('cdnProfileName'), '/', variables('endPointName'))]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9))]",
+                "isHttpAllowed": false,
+                "isHttpsAllowed": true,
+                "origins": [
+                    {
+                        "name": "[replace(substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9)), '.', '-')]",
+                        "properties": {
+                            "hostName": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts',variables('storageAccountName'))).primaryEndpoints.web), 9))]",
+                            "originHostHeader": "[substring(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web, 8, sub(length(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.web), 9))]"
+                        }
+                    }
+                ]
+            }
+        },
+        
+        
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "enableStaticWebsite",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'mysp')]": {}
+                }
+            },
+            "kind": "AzureCLI",
+            "properties": {
+                "azCliVersion": "2.50.0",
+                "scriptContent": "
+                    echo 'Script is working!!'
+                ",
+                "retentionInterval": "P1D"
+            }
+        }
+    ]
+}
