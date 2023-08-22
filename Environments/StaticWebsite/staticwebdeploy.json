@@ -64,7 +64,22 @@
                 ]
             }
         },
-        
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "name": "scriptRunner",
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "name": "[guid(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner'), subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab'))]",
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')).principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
         
         {
             "type": "Microsoft.Resources/deploymentScripts",
@@ -74,7 +89,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'mysp')]": {}
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', 'scriptRunner')]": {}
                 }
             },
             "kind": "AzureCLI",
